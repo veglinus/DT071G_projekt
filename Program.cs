@@ -11,6 +11,7 @@ namespace CaveAdventure
         static void Main(string[] args)
         {
             GamePlay.StartSetup();
+            //Minigame.MinigameStart();
 
             System.Environment.Exit(1);
         }
@@ -27,7 +28,7 @@ namespace CaveAdventure
 
             private static System.Timers.Timer Timer;
 
-            int Drunk;
+            //int Drunk;
 
             public static void StartSetup()
             {
@@ -81,7 +82,7 @@ namespace CaveAdventure
             public static void Tavern() {
                 int Drunk = 0;
 
-                Console.WriteLine("You arrive at the tavern. You see your neighbor Billy, the bartender and a gang of known thieves.");
+                Console.WriteLine("You arrive at the tavern. You see your neighbor Billy, the bartender, a gamemaster and a gang of known thieves.");
                 Console.WriteLine("Who would you like to interact with?");
                 var option = Console.ReadLine();
                 if (option.Contains("exit")) {
@@ -94,6 +95,14 @@ namespace CaveAdventure
                         BartenderDialogue();
                     } else if (option.Contains("gang") || option.Contains("thieves")) {
                         ThievesDialogue();
+                    } else if (option.Contains("gamemaster")) {
+                        Talk("Would you like to play a game?");
+                        var decision = Console.ReadLine();
+                        if (decision.Contains("yes")) {
+                            Minigame.MinigameStart();
+                        } else {
+                            Exit();
+                        }
                     } else {
                         Nothing();
                     }
@@ -129,61 +138,6 @@ namespace CaveAdventure
                 void ThievesDialogue() {
 
                 }
-
-                void Minigame() {
-                    
-                    
-                    Talk("How skilled are ye, my friend? (Choose difficulty)");
-                    var difficulty = Console.ReadLine();
-
-                    if (difficulty.Contains("easy")) {
-                        Easy();
-                    } else if (difficulty.Contains("medium")) {
-                        Medium();
-                    } else if (difficulty.Contains("hard")) {
-                        Hard();
-                    } else {
-                        Talk("Sorry, what was that?");
-                    }
-
-                    void NewTimer() {
-                        Timer = new System.Timers.Timer(5000);
-                        Timer.Elapsed += OnTimedEvent;
-                        Timer.Enabled = true;
-                    }
-                    void OnTimedEvent(object source, ElapsedEventArgs e) {
-                        Console.Write(e.SignalTime + "...");
-                    }
-
-
-                    void Easy() {
-                        Console.WriteLine("Right, easy it is. Let's see how fast you can do some simple multiplication.");
-                        System.Random random = new System.Random();
-
-                        int x = random.Next(10);
-                        int y = random.Next(10);
-                        int solution = x * y;
-                        System.Threading.Thread.Sleep(3000); // Wait
-                        Console.Clear();
-
-                        Console.WriteLine($"What is {x} times {y}?");
-                        NewTimer();
-
-
-
-
-
-                    }
-                    void Medium() {
-
-                    }
-                    void Hard() {
-
-                    }
-
-
-
-                }
             }
 
 
@@ -206,7 +160,7 @@ namespace CaveAdventure
                 ";
                 // if progress in story is correct
 
-                Console.WriteLine("You arrive at the graveyard. In front of you are several gravestones, maybe even SOMEONE you know lies here.");
+                Console.WriteLine("You arrive at the graveyard. In front of you are several gravestones, maybe SOMEONE you know lies here.");
                 var input = Console.ReadLine();
                 if (input.Contains("") || input.Contains("dad")) {
                     Console.WriteLine("After a few minutes of searching you find your dad's grave.");
