@@ -53,7 +53,8 @@ namespace CaveAdventure
                 Console.Write("\n");
                 foreach(char letter in text) {
                     Console.Write(letter);
-                    Thread.Sleep(50);
+                    //Thread.Sleep(50);
+                    Thread.Sleep(0);
                 }
             }
 
