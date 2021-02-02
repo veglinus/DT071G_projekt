@@ -2,14 +2,10 @@ using System;
 using System.Threading;
 using System.Timers;
 
-
 /*
 TODO:
 
-case insensitive
-timer-countdown
 enter causes crash while waiting for number
-text during number input causes crash
 
 */
 public static class Minigame
