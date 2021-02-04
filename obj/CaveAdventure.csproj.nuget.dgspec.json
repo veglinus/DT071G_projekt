@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Linus\\Documents\\GitHub\\DT071G_projekt\\CaveAdventure.csproj": {}
+    "C:\\Users\\User\\Documents\\GitHub\\CaveAdventure\\CaveAdventure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Linus\\Documents\\GitHub\\DT071G_projekt\\CaveAdventure.csproj": {
+    "C:\\Users\\User\\Documents\\GitHub\\CaveAdventure\\CaveAdventure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Linus\\Documents\\GitHub\\DT071G_projekt\\CaveAdventure.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\CaveAdventure\\CaveAdventure.csproj",
         "projectName": "CaveAdventure",
-        "projectPath": "C:\\Users\\Linus\\Documents\\GitHub\\DT071G_projekt\\CaveAdventure.csproj",
-        "packagesPath": "C:\\Users\\Linus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Linus\\Documents\\GitHub\\DT071G_projekt\\obj\\",
+        "projectPath": "C:\\Users\\User\\Documents\\GitHub\\CaveAdventure\\CaveAdventure.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Documents\\GitHub\\CaveAdventure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Linus\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -50,7 +50,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.405\\RuntimeIdentifierGraph.json"
         }
       }
     }

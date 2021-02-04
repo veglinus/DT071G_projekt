@@ -9,10 +9,14 @@ namespace CaveAdventure
     {
         static void Main(string[] args)
         {
+            /*
             GamePlay.StartSetup();
             GamePlay.Intro();
             GamePlay.Outside();
-            //Minigame.MinigameStart(); // For testing
+            */
+
+            
+            Minigame.MinigameStart(); // For testing
             //System.Environment.Exit(1);
         }
     }
@@ -126,7 +130,7 @@ namespace CaveAdventure
             public static void Tavern() {
                 int Drunk = 0;
 
-                Console.WriteLine("You arrive at the tavern. You see your neighbor Billy, the bartender, a gamemaster and a gang of known thieves.");
+                Console.WriteLine("You arrive at the tavern. You see your neighbor Billy, the bartender, a gamemaster and a gang of thieves.");
                 Console.WriteLine("Who would you like to interact with?");
                 var option = Console.ReadLine();
                 if (option.Contains("exit")) {
@@ -154,19 +158,18 @@ namespace CaveAdventure
                 void BartenderDialogue() {
                     Talk("Hello there, what can I do for ya?");
                     Console.WriteLine("1) Beer, 2) Gossip, 3) Beer");
-                    var option = Console.ReadLine();
+                    var option = Console.ReadLine().ToLower();
 
-                    if (option.Contains("beer") || option.Contains("3")) {
-                        Console.WriteLine("You order a beer and swig it fast.");
+                    if (option.Contains("beer") || option.Contains("3") || option.Contains("drink")) {
+                        Console.WriteLine("The bartender gives you a beer and you swig it fast.");
                         Drunk++;
 
                         if (Drunk <= 2) {
                             Console.WriteLine("Maybe it's time to stop now.");
                         } else if (Drunk == 5) {
                             Console.Clear();
-                            Console.WriteLine("Oh dear, you pass out.");
-                            // TODO: Set progress to 0
-                            // TODO: Go to house House();
+                            Console.WriteLine("Oh dear, you pass out. Somehow you end up at your house.");
+                            House();
                         } else {
                             Console.WriteLine("You feel fine, for now.");
                         }
@@ -187,8 +190,7 @@ namespace CaveAdventure
 
                 }
             }
-
-
+            
             public static void Graveyard() {
                 string gravestone = @"
                               _______
