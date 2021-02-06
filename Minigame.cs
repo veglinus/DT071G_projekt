@@ -100,6 +100,10 @@ public static class Minigame
                             Talk($"Well done! You got {points} points out of {rounds}!");
                             Talk("Would you like to play again? (yes or no)\n");
                             var decision = Console.ReadLine();
+
+                            if (difficulty == "medium" && points > 8 || difficulty == "hard" && points > 8) { // User wins coin
+                                // TODO: add reward coin
+                            }
                             if (decision.Contains("yes")) {
                                 Console.Clear();
                                 MinigameStart();
@@ -113,9 +117,9 @@ public static class Minigame
                         }
                     }
 
-                    void NewTimer() {
+                    void NewTimer() { // New timer
                         Timer = new System.Timers.Timer(time);
-                        Timer.Elapsed += OnTimedEvent;
+                        Timer.Elapsed += OnTimedEvent; // Event to change time 
                         Timer.Enabled = true;
                         Timer.Interval = 1000;
                     }
