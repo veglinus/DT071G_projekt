@@ -1,13 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JVug7lfzY7/OCRQyi3rMe3v8vCuJQRjVBJ4+F72GRXDE581syGS874X4v8BjBRs5zo/FUSymFqF3p9Znr2rYyA==",
+  "dgSpecHash": "Lt8jNP5MSWC/b+UhLOkRYBfcXt2y7nizMu+JR8V2lQb2mowCoTyNu5zSFSSJI0DCnHGDlDs+K2vaqBw62fpe5A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Saga\\Documents\\GitHub\\DT071G_projekt\\CaveAdventure.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Saga\\.nuget\\packages\\microsoft.netcore.app.ref\\3.1.0\\microsoft.netcore.app.ref.3.1.0.nupkg.sha512",
-    "C:\\Users\\Saga\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512",
-    "C:\\Users\\Saga\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
-    "C:\\Users\\Saga\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.14\\microsoft.netcore.app.host.win-x64.3.1.14.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\Linus\\Documents\\GitHub\\DT071G_projekt\\CaveAdventure.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
