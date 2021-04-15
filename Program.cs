@@ -12,11 +12,13 @@ namespace CaveAdventure
             /*
             GamePlay.StartSetup();
             GamePlay.Intro();*/
-            GamePlay.Outside();
+            //GamePlay.Outside();
             
 
             
             //Minigame.MinigameStart(); // For testing
+
+            Hangman.HangmanStart();
             //System.Environment.Exit(1);
         }
     }
@@ -93,7 +95,7 @@ namespace CaveAdventure
             }
             public static void Outside() {
                 Console.Clear();
-                Console.WriteLine("You're outside of your HOUSE.\n");
+                Console.WriteLine("You're outside of your HOUSE.\n You can go to your house, the bar, graveyard or cave.");
                 Console.WriteLine("What would you like to do?\n");
                 String action = Console.ReadLine().ToLower();
 
