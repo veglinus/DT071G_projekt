@@ -51,8 +51,6 @@ public static class Hangman
             }
             MainActivity();
 
-            
-
 
             void MainActivity() {
 
@@ -63,9 +61,22 @@ public static class Hangman
                     Talk("Congratulations! You won!");
                 } else {
 
+
+                    var chosenWordSpaced = "";
+
+                    foreach (var letter in blankstring) // For putting spaces in the word
+                    {
+                        if (chosenWordSpaced == "") {
+                            chosenWordSpaced += letter;
+                        } else {
+                            chosenWordSpaced += " " + letter;
+                        }
+                        
+                    }
+
                     stickman(); // To draw the stickman
                     //Talk($"Word is: {chosenword}, blanked out: {blankstring}\nTry any letter!\n"); // Debug
-                    Talk($"{blankstring}\n\nTry a letter!\n");
+                    Talk($"{chosenWordSpaced}\n\nTry a letter or an entire word!\n");
 
                     if (tries != "") { // If this isn't the first input, show list of tried letters
                     Talk($"You've tried: {tries}\n");
@@ -76,6 +87,7 @@ public static class Hangman
                     if (guess.Length > 1) { // User guessing a word, not just a letter
                         if (guess == chosenword) { // User guessed the word correctly
                             Talk("Congratulations! You won!");
+                            System.Environment.Exit(1);
                         } else {
                             incorrect();
                         }
@@ -96,9 +108,9 @@ public static class Hangman
                                     stringb.Remove(match.Index, 1); // remove the underscore at index
                                     stringb.Insert(match.Index, guess); // insert the letter guessed
                                     blankstring = stringb.ToString(); // set string to new string with guessed letter
-
-                                    MainActivity(); // start the function over
                                 }
+
+                                MainActivity(); // start the function over when we've finished the foreach
                             } else {
                                 incorrect();
                             }
@@ -107,7 +119,7 @@ public static class Hangman
 
                     void incorrect() {
                         Talk("Oh no! That's wrong..");
-                        Thread.Sleep(1000);
+                        Thread.Sleep(50);
                         lives--;
                         MainActivity();
                     }
@@ -119,9 +131,9 @@ public static class Hangman
             void stickman() { // Logic for typing out mr stickmans limbs depending on number of lives left
                 string thestickman = @"
                 /----|
-                |    O
-                |  - | -
-                |   / \
+                |
+                |
+                |
                 |
                 "; // Default state
 
@@ -129,56 +141,72 @@ public static class Hangman
                 {
                 case 6:
                 thestickman = @"
-                    O
-                 -- | -
-                   / \
+                /----|
+                |    O
+                |
+                |
+                |
                 ";
                 break;
                     
                 case 5:
                 thestickman = @"
-                    O
-                  - | -
-                   / \
+                /----|
+                |    O
+                |    |
+                |
+                |
                 ";
                 break;
 
                 case 4:
                 thestickman = @"
-                    O
-                  - | -
-                   / 
+                /----|
+                |    O
+                |    | -
+                |   
+                |
                 ";
                 break;
 
                 case 3:
                 thestickman = @"
-                    O
-                    | -
-                   / 
+                /----|
+                |    O
+                |    | -
+                |     \
+                |
                 ";
                 break;
 
                 case 2:
                 thestickman = @"
-                    O
-                    |
-                   / 
+                /----|
+                |    O
+                |  - | -
+                |     \
+                |
                 ";
                 break;
 
                 case 1:
                 thestickman = @"
-                    O
-                    |
-                 
+                /----|
+                |    O
+                |  - | -
+                |   / \
+                |
                 ";
                 break;
 
                 case 0:
                 thestickman = @"
                 The stickman has died.
-                -    o
+                /----|
+                | 
+                |
+                |
+                | 0 - c
                 ";
                 break;
                     
