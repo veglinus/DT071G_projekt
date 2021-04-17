@@ -16,7 +16,7 @@ namespace CaveAdventure
             
 
             
-            //Minigame.MinigameStart(); // For testing
+            //Mathgame.MathgameStart(); // For testing
 
             Hangman.HangmanStart();
             //System.Environment.Exit(1);
@@ -33,8 +33,9 @@ namespace CaveAdventure
             static string Catchphrase = "Cowabunga!"; // Catchphrase, used later
             static int Billy = 0; // Billy dialogue progress
             static int Gamemaster = 0;
+            static int HangmanScore = 0;
             static string Position = "Outside"; // Standard position of player
-            private static System.Timers.Timer Timer; // Timer for minigame
+            private static System.Timers.Timer Timer; // Timer for Mathgame
             static int Drunk = 0;
 
             public static void StartSetup()
@@ -173,7 +174,7 @@ namespace CaveAdventure
                 if (Billy != 3) { // Clear billy option when his quest is complete
                     billyOption = "";
                 }
-                Console.WriteLine($"You arrive at the tavern. You see {billyOption}the bartender, a gamemaster and a gang of thieves.\n");
+                Console.WriteLine($"You arrive at the tavern. You see {billyOption}the bartender, Mark the hangman, Dessie the mathematician and a gang of thieves.\n");
                 Console.WriteLine("Who would you like to interact with?\n");
                 var option = Console.ReadLine().ToLower();
 
@@ -182,10 +183,12 @@ namespace CaveAdventure
                 } else if (option.Contains("bartender")) {
                     Console.WriteLine("You approach the bartender.");
                     BartenderDialogue();
-                } else if (option.Contains("gang") || option.Contains("thieves")) {
-                    ThievesDialogue();
-                } else if (option.Contains("gamemaster")) {
-                    GamemasterDialogue();
+                /*} else if (option.Contains("gang") || option.Contains("thieves")) {
+                    ThievesDialogue();*/
+                } else if (option.Contains("mathematician") || option.Contains("dessie")) {
+                    MathematicianDialogue();
+                } else if (option.Contains("hangman") || option.Contains("mark")) {
+                    HangManDialogue();
                 } else if (option.Contains("exit") || option.Contains("back")) {
                     Exit();
                 } else {
@@ -252,22 +255,32 @@ namespace CaveAdventure
                     }
                 }
 
-                void GamemasterDialogue() { // TO start minigame
-                    String GMdialogue = " There might be something in it for you if you complete the medium difficulty..";
+                void MathematicianDialogue() { // TO start Mathgame
+                    String GMdialogue = " There might be something in it for you if you complete a few games..";
                     if (Gamemaster == 1) { // You havn't won medium yet
                         GMdialogue = "";
                     }
-                    Talk($"Would you like to play a game?{GMdialogue}");
+                    Talk($"Would you like to play hangman?{GMdialogue}");
                     var decision = Console.ReadLine();
                     if (decision.Contains("yes") ||decision.Contains("ok")) {
-                        Minigame.MinigameStart();
+                        Mathgame.MathgameStart();
                     } else {
                         Exit();
                     }
                 }
 
-                void ThievesDialogue() {
-
+                void HangManDialogue() {
+                    String GMdialogue = " There might be something in it for you if you complete my game..";
+                    if (HangmanScore == 1) { // You havn't won medium yet
+                        GMdialogue = "";
+                    }
+                    Talk($"Would you like to play a game?{GMdialogue}");
+                    var decision = Console.ReadLine();
+                    if (decision.Contains("yes") ||decision.Contains("ok")) {
+                        Hangman.HangmanStart();
+                    } else {
+                        Exit();
+                    }
                 }
             }
             

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Timers;
+using CaveAdventure;
 
 /*
 TODO:
@@ -8,7 +9,7 @@ TODO:
 enter causes crash while waiting for number
 
 */
-public static class Minigame
+public static class Mathgame
 {
     private static System.Timers.Timer Timer;
 
@@ -26,7 +27,7 @@ public static class Minigame
         writeSlow(msg);
         Console.ResetColor();
     }
-    public static void MinigameStart() {
+    public static void MathgameStart() {
         try
         {
             bool timeout = false;
@@ -106,9 +107,9 @@ public static class Minigame
                             }
                             if (decision.Contains("yes")) {
                                 Console.Clear();
-                                MinigameStart();
+                                MathgameStart();
                             } else {
-                                System.Environment.Exit(1);
+                                GamePlay.Exit();
                             }
 
                         } else { // inte klar med game
@@ -145,8 +146,8 @@ public static class Minigame
         }
         catch (System.Exception)
         {
-            Console.WriteLine("You trip over Billy, causing him to have to start the game over.");
-            MinigameStart();
+            Console.WriteLine("You trip over Dessie, causing him to have to start the game over.");
+            MathgameStart();
         }
     }
 }

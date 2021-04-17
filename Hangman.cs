@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
+using CaveAdventure;
 
 public static class Hangman
 {
@@ -57,10 +58,13 @@ public static class Hangman
                 if (lives == 0) { // Check if you have lives left
                     stickman();
                     Talk("You ran out of lives! Sorry!");
+                    GameEnd();
+                    
                 } else if (!blankstring.Contains("_")) { // No underscores means that the entire word is there, = user has won
                     Talk("Congratulations! You won!");
-                } else {
+                    GameEnd();
 
+                } else {
 
                     var chosenWordSpaced = "";
 
@@ -125,6 +129,18 @@ public static class Hangman
                     }
                 }
 
+            }
+
+            void GameEnd() {
+                Talk("Would you like to play again? (yes or no)\n");
+                var decision = Console.ReadLine();
+
+                if (decision.Contains("yes")) {
+                    Console.Clear();
+                    MainActivity();
+                } else {
+                    GamePlay.Exit();
+                }
             }
 
 
