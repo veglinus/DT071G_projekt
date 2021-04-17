@@ -12,28 +12,13 @@ enter causes crash while waiting for number
 public static class Mathgame
 {
     private static System.Timers.Timer Timer;
-
-    public static void writeSlow(string text)
-    {
-        Console.Write("\n");
-        foreach(char letter in text) {
-            Console.Write(letter);
-            Thread.Sleep(50);
-        }
-    }
-
-    public static void Talk(string msg) {
-        Console.ForegroundColor = ConsoleColor.Green;
-        writeSlow(msg);
-        Console.ResetColor();
-    }
     public static void MathgameStart() {
         try
         {
             bool timeout = false;
             
             
-            Talk("How skilled are ye, my friend? (Choose difficulty: Easy, medium, hard)\n");
+            GamePlay.Talk("How skilled are ye, my friend? (Choose difficulty: Easy, medium, hard)\n");
             var difficulty = Console.ReadLine().ToLower();
 
             if (difficulty.Contains("easy")) {
@@ -43,15 +28,15 @@ public static class Mathgame
             } else if (difficulty.Contains("hard")) {
                 SetupGame(2500, 15, "I don't think you're gonna be good enough for this.");
             } else {
-                Talk("Sorry, what was that?");
+                GamePlay.Talk("Sorry, what was that?");
             }
 
             void SetupGame(int time, int rounds, string difficulty) {
                 int progress = 0;
                 int points = 0;
 
-                Talk(difficulty);
-                Talk("Be quick! I'm an impatient man.");
+                GamePlay.Talk(difficulty);
+                GamePlay.Talk("Be quick! I'm an impatient man.");
                 NewRound();
 
                 void NewRound() {
@@ -78,28 +63,28 @@ public static class Mathgame
                         if (input == solution) { // Correct answer
                     
                             if (timeout == true) { // But user too slow to 
-                                Talk("That's correct! But you were a bit too slow..");
+                                GamePlay.Talk("That's correct! But you were a bit too slow..");
                             } else { // Correct answer in time
-                                Talk($"That's correct!");
+                                GamePlay.Talk($"That's correct!");
                                 points++;
                             }
                         
                         } else { // Wrong answer
-                            Talk($"Oh dear, that's wrong. The correct answer was {solution}.");
+                            GamePlay.Talk($"Oh dear, that's wrong. The correct answer was {solution}.");
                         }
 
                         CheckForEnd();
                     }
                     catch (System.Exception)
                     {
-                        Talk($"Oh dear, that's wrong. The correct answer was {solution}.");
+                        GamePlay.Talk($"Oh dear, that's wrong. The correct answer was {solution}.");
                         CheckForEnd();
                     }
 
                     void CheckForEnd() {
                         if (progress == rounds) { // klar med game
-                            Talk($"Well done! You got {points} points out of {rounds}!");
-                            Talk("Would you like to play again? (yes or no)\n");
+                            GamePlay.Talk($"Well done! You got {points} points out of {rounds}!");
+                            GamePlay.Talk("Would you like to play again? (yes or no)\n");
                             var decision = Console.ReadLine();
 
                             if (difficulty == "medium" && points > 8 || difficulty == "hard" && points > 8) { // User wins coin
@@ -113,7 +98,7 @@ public static class Mathgame
                             }
 
                         } else { // inte klar med game
-                            Talk($"Let's try another..");
+                            GamePlay.Talk($"Let's try another..");
                             NewRound();
                         }
                     }

@@ -6,7 +6,6 @@ Run with: ```dotnet run```
 # TODO:
 
 Debug last of stickman
-Put stickman on character in tavern x
 
 More quest-characters
 

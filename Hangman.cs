@@ -10,20 +10,6 @@ public static class Hangman
 {
     private static System.Timers.Timer Timer;
 
-    public static void writeSlow(string text)
-    {
-        Console.Write("\n");
-        foreach(char letter in text) {
-            Console.Write(letter);
-            Thread.Sleep(50);
-        }
-    }
-
-    public static void Talk(string msg) {
-        Console.ForegroundColor = ConsoleColor.Green;
-        writeSlow(msg);
-        Console.ResetColor();
-    }
     public static void HangmanStart() {
         try
         {
@@ -57,11 +43,11 @@ public static class Hangman
 
                 if (lives == 0) { // Check if you have lives left
                     stickman();
-                    Talk("You ran out of lives! Sorry!");
+                    GamePlay.Talk("You ran out of lives! Sorry!");
                     GameEnd();
                     
                 } else if (!blankstring.Contains("_")) { // No underscores means that the entire word is there, = user has won
-                    Talk("Congratulations! You won!");
+                    GamePlay.Talk("Congratulations! You won!");
                     GameEnd();
 
                 } else {
@@ -79,32 +65,32 @@ public static class Hangman
                     }
 
                     stickman(); // To draw the stickman
-                    //Talk($"Word is: {chosenword}, blanked out: {blankstring}\nTry any letter!\n"); // Debug
-                    Talk($"{chosenWordSpaced}\n\nTry a letter or an entire word!\n");
+                    //GamePlay.Talk($"Word is: {chosenword}, blanked out: {blankstring}\nTry any letter!\n"); // Debug
+                    GamePlay.Talk($"{chosenWordSpaced}\n\nTry a letter or an entire word!\n");
 
                     if (tries != "") { // If this isn't the first input, show list of tried letters
-                    Talk($"You've tried: {tries}\n");
+                    GamePlay.Talk($"You've tried: {tries}\n");
                     }
 
                     var guess = Console.ReadLine().ToUpper(); // The user guesses
 
                     if (guess.Length > 1) { // User guessing a word, not just a letter
                         if (guess == chosenword) { // User guessed the word correctly
-                            Talk("Congratulations! You won!");
+                            GamePlay.Talk("Congratulations! You won!");
                             System.Environment.Exit(1);
                         } else {
                             incorrect();
                         }
                     } else { // Single letter guess
                         if (tries.Contains(guess)) { // Check if user has tried this letter before
-                            Talk($"You've already tried {guess}.");
+                            GamePlay.Talk($"You've already tried {guess}.");
                             MainActivity(); // restart
 
                         } else { // New letter guess
                             tries += guess; // Add guess to tried letters
 
                             if (chosenword.Contains(guess)) { // Match was found
-                                Talk("That's correct!");
+                                GamePlay.Talk("That's correct!");
 
                                 foreach (Match match in Regex.Matches(chosenword, "(" + guess + ")")) // Find all occurances of the letter in the chosen word
                                 {
@@ -122,7 +108,7 @@ public static class Hangman
                     }
 
                     void incorrect() {
-                        Talk("Oh no! That's wrong..");
+                        GamePlay.Talk("Oh no! That's wrong..");
                         Thread.Sleep(50);
                         lives--;
                         MainActivity();
@@ -132,7 +118,7 @@ public static class Hangman
             }
 
             void GameEnd() {
-                Talk("Would you like to play again? (yes or no)\n");
+                GamePlay.Talk("Would you like to play again? (yes or no)\n");
                 var decision = Console.ReadLine();
 
                 if (decision.Contains("yes")) {

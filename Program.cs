@@ -12,13 +12,13 @@ namespace CaveAdventure
             /*
             GamePlay.StartSetup();
             GamePlay.Intro();*/
-            //GamePlay.Outside();
+            GamePlay.Outside();
             
 
             
             //Mathgame.MathgameStart(); // For testing
 
-            Hangman.HangmanStart();
+            //Hangman.HangmanStart();
             //System.Environment.Exit(1);
         }
     }
@@ -37,6 +37,22 @@ namespace CaveAdventure
             static string Position = "Outside"; // Standard position of player
             private static System.Timers.Timer Timer; // Timer for Mathgame
             static int Drunk = 0;
+
+            public static void writeSlow(string text)
+            {
+                Console.Write("\n");
+                foreach(char letter in text) {
+                    Console.Write(letter);
+                    //Thread.Sleep(50);
+                    Thread.Sleep(0);
+                }
+            }
+
+            public static void Talk(string msg) {
+                Console.ForegroundColor = ConsoleColor.Green;
+                writeSlow(msg);
+                Console.ResetColor();
+            }
 
             public static void StartSetup()
             {
@@ -96,7 +112,7 @@ namespace CaveAdventure
             }
             public static void Outside() {
                 Console.Clear();
-                Console.WriteLine("You're outside of your HOUSE.\n You can go to your house, the bar, graveyard or cave.");
+                Console.WriteLine("You're outside of your HOUSE.\nYou can go to your house, the bar, graveyard or cave.");
                 Console.WriteLine("What would you like to do?\n");
                 String action = Console.ReadLine().ToLower();
 
@@ -146,10 +162,10 @@ namespace CaveAdventure
                         Console.Write("\nBUT WHEN YOU FEEL READY YOU SHOULD.");
                         Console.Write("\nHE NEVER GOT TO GIVE YOU THAT GIFT AFTER ALL.");
                         Console.Write("\nCHECK UNDER THE FLOWERS. YOU WONT REGFRET IT.");
-                        Console.Write("\n\nLOVE, GRAMPA");
+                        Console.Write("\n\nLOVE, GRAMPA\n");
                         Console.WriteLine("Perhaps you should follow grampas advice?");
                         Wait();
-                    } else if (action.Contains("back") || action.Contains("return") || action.Contains("outside")) {
+                    } else if (action.Contains("back") || action.Contains("return") || action.Contains("outside") || action.Contains("exit")) {
                         Outside();
                     } else {
                         Console.WriteLine("Nothing interesting happens. (Say EXIT to leave)");
@@ -164,6 +180,11 @@ namespace CaveAdventure
                 var choice = UserInput();
                 if (choice == "Simsalabim") {
                     // TODO: Ending
+                    GamePlay.Talk("Congratulations! You've won!");
+                } else if (choice.Contains("back") || choice.Contains("return") || choice.Contains("outside") || choice.Contains("exit")) {
+                    Outside();
+                } else {
+                    Cave();
                 }
             }
 
@@ -198,25 +219,25 @@ namespace CaveAdventure
                 void BillyDialogue() { // Dialogue for Billy
                     Console.WriteLine("You approach your neighbor Billy!");
 
-                    Talk("Howdy there neighbor! Boy you look like you're having an adventure. Are you doing alright?");
+                    GamePlay.Talk("Howdy there neighbor! Boy you look like you're having an adventure. Are you doing alright?");
                     if (Billy == 0) { // If this is the first talk
-                        Talk("Can I ask you for a favor? I havn't seen Nessie since last night. Give me a shout if you see her alright?");
+                        GamePlay.Talk("Can I ask you for a favor? I havn't seen Nessie since last night. Give me a shout if you see her alright?");
                         Billy = 1;
                         Console.WriteLine("You nod and leave Billy. (Press any key to continue)");
                         Console.ReadLine();
                         Tavern();
                     } else if (Billy == 1) { // Havn't seen dog yet
-                        Talk("Have you caught a glimpse of my dog Nessie yet?");
+                        GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet?");
                         Console.WriteLine("You shake your head and leave Billy. (Press any key to continue)");
                         Console.ReadLine();
                         Tavern();
                     } else if (Billy == 2) { // You ahve seen the dog
-                        Talk("Have you caught a glimpse of my dog Nessie yet?");
+                        GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet?");
                         Console.WriteLine("Where did you see the dog?");
                         var response = Console.ReadLine().ToLower();
 
                         if (response.Contains("graveyard")) { // You give the correct response
-                            Talk("She was at the graveyard?! Boy is she far from home. Thanks for helping out neighbor. Here's a little reward.");
+                            GamePlay.Talk("She was at the graveyard?! Boy is she far from home. Thanks for helping out neighbor. Here's a little reward.");
                             Console.WriteLine("You got an old coin! (Press any key to continue)");
                             Console.ReadLine();
                             Billy = 3;
@@ -224,7 +245,7 @@ namespace CaveAdventure
                         } else if (option.Contains("exit") || option.Contains("back")) {
                             Tavern();
                         } else { // You give the wrong response
-                            Talk("No.. I don't think she would be there. You probably saw something else.");
+                            GamePlay.Talk("No.. I don't think she would be there. You probably saw something else.");
                             Console.WriteLine("Billy looks sad. You better find his dog soon. You walk away. (Press any key to continue)");
                             Console.ReadLine();
                             Tavern();
@@ -233,7 +254,7 @@ namespace CaveAdventure
                 }
 
                 void BartenderDialogue() { // Because every tavern needs a bartender
-                    Talk("Hello there, what can I do for ya?");
+                    GamePlay.Talk("Hello there, what can I do for ya?");
                     Console.WriteLine("1) Beer, 2) Gossip, 3) Beer");
                     var option = Console.ReadLine().ToLower();
 
@@ -256,11 +277,12 @@ namespace CaveAdventure
                 }
 
                 void MathematicianDialogue() { // TO start Mathgame
-                    String GMdialogue = " There might be something in it for you if you complete a few games..";
+                    String GMdialogue = " There might be something in it for you if you complete the medium difficulty..";
                     if (Gamemaster == 1) { // You havn't won medium yet
                         GMdialogue = "";
                     }
-                    Talk($"Would you like to play hangman?{GMdialogue}");
+                    GamePlay.Talk($"Would you like to play a game?{GMdialogue}\n");
+                    
                     var decision = Console.ReadLine();
                     if (decision.Contains("yes") ||decision.Contains("ok")) {
                         Mathgame.MathgameStart();
@@ -274,7 +296,7 @@ namespace CaveAdventure
                     if (HangmanScore == 1) { // You havn't won medium yet
                         GMdialogue = "";
                     }
-                    Talk($"Would you like to play a game?{GMdialogue}");
+                    GamePlay.Talk($"Would you like to play hangman?{GMdialogue}\n");
                     var decision = Console.ReadLine();
                     if (decision.Contains("yes") ||decision.Contains("ok")) {
                         Hangman.HangmanStart();
@@ -311,13 +333,14 @@ namespace CaveAdventure
                     Console.WriteLine(gravestone);
 
                     Console.WriteLine("You look at the grave. What do you do?\n");
+
                     var input2 = Console.ReadLine().ToLower();
                     if (input2.Contains("behind") || input2.Contains("search")) {
                         Console.WriteLine("You find a key lying just behind the gravestone. Perhaps this will become important later?");
-                        Console.WriteLine("You say a prayer and leave the graveyard.");
-                        Exit();
+                        Console.WriteLine("You say a prayer and leave.");
+                        Graveyard();
                     } else if (input.Contains("exit")|| input.Contains("back")) { 
-                        Exit();
+                        Graveyard();
                     } else {
                         Console.WriteLine("Nothing interesting happens.");
                         Graveyard();
