@@ -159,7 +159,14 @@ namespace CaveAdventure
             }
 
             public static void Cave() {
-                Console.WriteLine("You arrive at the opening to the cave. It's blocked by a door, a key and 4 digits are needed to open the door.");
+                Console.WriteLine("You arrive at the opening to the cave. It's blocked by a door, which seems to need 3 keys to open. The door says:");
+                Console.WriteLine("A KEY FOR THE KINDNESS OF YOUR HEART");
+                Console.WriteLine("A KEY FROM THE MOST LOVED ONE");
+                Console.WriteLine("A KEY FOR YOUR WISDOM, PERHAPS EVEN LUCK");
+                Console.WriteLine("A KEY FOR KNOWLEDGE");
+                Console.WriteLine("AND A KEY FROM THE BRAVE");
+                Console.WriteLine("THY WHICH SITS ON ALL KEYS SHALL BE GREATLY REWARDED");
+
 
                 var choice = UserInput();
                 if (choice == "Simsalabim") {
