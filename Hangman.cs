@@ -26,11 +26,11 @@ public static class Hangman
             var chosenword = dictionary[i]; // this is the word we're using
             int length = chosenword.Length;
 
-            string blankstring = "";
-            string tries = "";
-            int lives = 7;
+            string blankstring = ""; // Will eventually become the blanket out _ _ _ _ _ word
+            string tries = ""; // What the user has tried before
+            int lives = 7; // How many lives left, standard 7
 
-            if (blankstring == "") {
+            if (blankstring == "") { // Blanks out the word
                 foreach (var letter in chosenword)
                 {
                     blankstring += "_";
