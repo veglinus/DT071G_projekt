@@ -12,7 +12,9 @@ namespace CaveAdventure
             /*
             GamePlay.StartSetup();
             GamePlay.Intro();*/
-            GamePlay.Outside();
+            //GamePlay.Outside();
+
+            GamePlay.Thief();
             
 
             
@@ -37,6 +39,14 @@ namespace CaveAdventure
             static string Position = "Outside"; // Standard position of player
             private static System.Timers.Timer Timer; // Timer for Mathgame
             static int Drunk = 0;
+
+            static int ThievesEncounter = 0;
+
+            static bool BillyKey = false;
+            static bool HangmanKey = false;
+            static bool MathKey = false;
+            static bool GraveKey = false;
+            static bool BraveKey = false;
 
             public static void writeSlow(string text)
             {
@@ -111,6 +121,15 @@ namespace CaveAdventure
                 Console.WriteLine("Nothing interesting happens.");
             }
             public static void Outside() {
+
+                if (ThievesEncounter == 0) { // Random encounter chance to run into the thief encounter
+                    var chance = new Random().Next(0, 10);
+
+                    if (chance > 5) {
+                        Thief();
+                    }
+                }
+
                 Console.Clear();
                 Console.WriteLine("You're outside of your HOUSE.\nYou can go to your house, the bar, graveyard or cave.");
                 Console.WriteLine("What would you like to do?\n");
@@ -181,7 +200,7 @@ namespace CaveAdventure
                 Console.WriteLine("A KEY FOR YOUR WISDOM, PERHAPS EVEN LUCK");
                 Console.WriteLine("A KEY FOR KNOWLEDGE");
                 Console.WriteLine("AND A KEY FROM THE BRAVE");
-                Console.WriteLine("THY WHICH SITS ON ALL KEYS SHALL BE GREATLY REWARDED");
+                Console.WriteLine("THY WHICH SITS ON ALL KEYS SHALL BE GREATLY REWARDED\n");
 
 
                 var choice = UserInput();
@@ -211,8 +230,6 @@ namespace CaveAdventure
                 } else if (option.Contains("bartender")) {
                     Console.WriteLine("You approach the bartender.");
                     BartenderDialogue();
-                /*} else if (option.Contains("gang") || option.Contains("thieves")) {
-                    ThievesDialogue();*/
                 } else if (option.Contains("mathematician") || option.Contains("dessie")) {
                     MathematicianDialogue();
                 } else if (option.Contains("hangman") || option.Contains("mark")) {
@@ -245,9 +262,10 @@ namespace CaveAdventure
 
                         if (response.Contains("graveyard")) { // You give the correct response
                             GamePlay.Talk("She was at the graveyard?! Boy is she far from home. Thanks for helping out neighbor. Here's a little reward.");
-                            Console.WriteLine("You got an old coin! (Press any key to continue)");
+                            Console.WriteLine("You got an old key! (Press any key to continue)");
                             Console.ReadLine();
                             Billy = 3;
+                            BillyKey = true;
                             Tavern();
                         } else if (option.Contains("exit") || option.Contains("back")) {
                             Tavern();
@@ -312,6 +330,68 @@ namespace CaveAdventure
                     }
                 }
             }
+            public static void Thief() {
+                ThievesEncounter = 1;
+
+                Console.Clear();
+                Console.WriteLine("As you exit a nimble thief starts picking your pockets, and you catch him in the midst of it!");
+                Console.WriteLine("What do you do? (Write a VERB)\n");
+
+                string verb = Console.ReadLine().ToLower();
+                Console.Clear();
+                Console.WriteLine($"You {verb} the thief, he's shocked!");
+                Talk($"Wha?! What did you do that for?! Don't you know {verb} is illegal here?");
+                Talk("Tell you what, if you defeat me in a game I might let you go..");
+                Talk("So what will it be..? ");
+
+                void GameStart() {
+                    Talk("Rock, paper, or scissor?");
+
+                    string UserChoice = Console.ReadLine().ToLower();
+                    if (UserChoice != "rock" || UserChoice != "paper" || UserChoice != "scissor") { // Validation for input
+                        Console.WriteLine("That's not a valid input. Let's try that again.\n");
+                        GameStart();
+                    }
+
+                    List<string> rps = new List<string>(){ // List of possible choicse
+                    "rock",
+                    "paper",
+                    "scissor"
+                    };
+                    var randomIndex = new Random().Next(rps.Count); // Take a random number
+                    var ThiefChoice = UserChoice[randomIndex].ToString(); // Pick option from list using random number
+
+                    if (ThiefChoice == UserChoice) { // if choices are the same, tie
+                        Talk($"{ThiefChoice}! Ah darn, you picked that aswell. Again!\n\n");
+                        GameStart();
+                    } else if (UserChoice == "rock") {
+                        if (ThiefChoice == "scissor") {
+                            Win();
+                        } else {
+                            Loss();
+                        }
+                    } else if (UserChoice == "paper") {
+                        if (ThiefChoice == "rock") {
+                            Win();
+                        } else {
+                            Loss();
+                        }
+                    } else if (UserChoice == "scissor") {
+                        if (ThiefChoice == "paper") {
+                            Win();
+                        } else {
+                            Loss();
+                        }
+                    }
+
+                    void Win() {
+                        Console.WriteLine($"You beat the thief's {ThiefChoice} with your {UserChoice}!");
+                    }
+                    void Loss() {
+                        Console.WriteLine($"The thief beats your {UserChoice} with his {ThiefChoice}..");
+                    }
+                }
+            }
             
             public static void Graveyard() {
                 string gravestone = @"
@@ -345,6 +425,7 @@ namespace CaveAdventure
                     if (input2.Contains("behind") || input2.Contains("search")) {
                         Console.WriteLine("You find a key lying just behind the gravestone. Perhaps this will become important later?");
                         Console.WriteLine("You say a prayer and leave.");
+                        GraveKey = true;
                         Graveyard();
                     } else if (input.Contains("exit")|| input.Contains("back")) { 
                         Graveyard();
