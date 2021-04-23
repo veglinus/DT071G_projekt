@@ -350,7 +350,7 @@ namespace CaveAdventure
                     Talk($"Rock, paper, or scissor? Score: {score}\n");
 
                     string UserChoice = Console.ReadLine().ToLower();
-                    if (UserChoice != "rock" && UserChoice != "paper" && UserChoice != "scissor") { // Validation for input
+                    if (UserChoice != "rock" && UserChoice != "paper" && UserChoice != "scissor" && UserChoice != "cheat") { // Validation for input
                         Console.WriteLine("That's not a valid input. Let's try that again.\n");
                         GameStart();
                     }
@@ -365,7 +365,7 @@ namespace CaveAdventure
                     string ThiefChoice = rps[randomIndex]; // Pick option from list using random number
 
                     if (ThiefChoice == UserChoice) { // if choices are the same, tie
-                        Talk($"{ThiefChoice}! Ah darn, you picked that aswell. Again!\n\n");
+                        Talk($"Ah darn, you picked {ThiefChoice} aswell! It's a tie!");
                         GameStart();
                     } else if (UserChoice == "rock") {
                         if (ThiefChoice == "scissor") {
@@ -385,6 +385,9 @@ namespace CaveAdventure
                         } else {
                             Loss();
                         }
+                    } else if (UserChoice == "cheat") { // to get past the event quickly
+                        Talk("What the?! How did you do that?");
+                        Win();
                     }
 
                     void Win() {
@@ -404,7 +407,8 @@ namespace CaveAdventure
                         if (score > 0) {
                             score--;
                         }
-                        Console.WriteLine($"The thief beats your {UserChoice} with his {ThiefChoice}..");
+                        Talk("Ha! Beat ya!");
+                        Console.WriteLine($"\nThe thief beats your {UserChoice} with his {ThiefChoice}..");
                         GameStart();
                     }
                 }
