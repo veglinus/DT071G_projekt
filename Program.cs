@@ -9,17 +9,12 @@ namespace CaveAdventure
     {
         static void Main(string[] args)
         {
-            /*
+            
             GamePlay.StartSetup();
-            GamePlay.Intro();*/
-            //GamePlay.Outside();
-
-            GamePlay.Thief();
-            
-
-            
+            GamePlay.Intro();
+            GamePlay.Outside();
+            //GamePlay.Thief();
             //Mathgame.MathgameStart(); // For testing
-
             //Hangman.HangmanStart();
             //System.Environment.Exit(1);
         }
@@ -31,11 +26,12 @@ namespace CaveAdventure
 
     public partial class GamePlay
     {
-            static string Name = "adventurer"; // Used for name
-            static string Catchphrase = "Cowabunga!"; // Catchphrase, used later
+            public static string Name = "adventurer"; // Used for name
+            public static string Catchphrase = "Cowabunga!"; // Catchphrase, used later
             static int Billy = 0; // Billy dialogue progress
-            static int Gamemaster = 0;
-            static int HangmanScore = 0;
+/*
+            static int Gamemaster = 0; // See if we've won yet
+            static int HangmanScore = 0; // See if we've won yet */
             static string Position = "Outside"; // Standard position of player
             private static System.Timers.Timer Timer; // Timer for Mathgame
             static int Drunk = 0;
@@ -67,12 +63,18 @@ namespace CaveAdventure
             public static void StartSetup()
             {
                 Console.WriteLine("Welcome adventurer! Before we begin, what is your name?\n");
-                Name = Console.ReadLine();
+                var newName = Console.ReadLine();
+                if (newName != "") {
+                    Name = newName;
+                } else {
+                    Console.WriteLine("Sorry I didn't quite catch that, let's try again.");
+                    StartSetup();
+                }
                 List<String> inventory = new List<String>();
 
                 Console.Clear();
                 writeSlow($"Hello {Name}, I'm your guide on this adventure. I will try to interpret your words into actions in this game.\nI am the voice inside your head and more.");
-                writeSlow($"\nLet's get this adventure started. It's a short one after all. Type in your catchphrase and let's go!");
+                writeSlow($"\nLet's get this adventure started. It's a short one after all. Type in your catchphrase and let's go!\n");
                 Catchphrase = Console.ReadLine();
 
                 Console.Clear();
@@ -87,7 +89,8 @@ namespace CaveAdventure
                 writeSlow($"You're a lone adventurer and wake up inside of your house. You've had many great adventures before in your life {Name}, but there has always been one that you havn't solved.");
                 writeSlow($"To the south-west of your house is a cave. There's a door with a number combination on it that you've never been able to figure out.");
                 writeSlow($"Perhaps someone in your town knows more?\nYou step outside your door, today is the day you get past that door.");
-                Console.WriteLine("\n\n");
+                Console.WriteLine("\n\nPress any key to continue..\n");
+                Console.ReadLine();
             }
 
             public static void Exit() {
@@ -303,11 +306,10 @@ namespace CaveAdventure
 
                 void MathematicianDialogue() { // TO start Mathgame
                     String GMdialogue = " There might be something in it for you if you complete the medium difficulty..";
-                    if (Gamemaster == 1) { // You havn't won medium yet
+                    if (MathKey == true) { // You've already won medium
                         GMdialogue = "";
                     }
                     GamePlay.Talk($"Would you like to play a game?{GMdialogue}\n");
-                    
                     var decision = Console.ReadLine();
                     if (decision.Contains("yes") ||decision.Contains("ok")) {
                         Mathgame.MathgameStart();
@@ -318,7 +320,7 @@ namespace CaveAdventure
 
                 void HangManDialogue() {
                     String GMdialogue = " There might be something in it for you if you complete my game..";
-                    if (HangmanScore == 1) { // You havn't won medium yet
+                    if (HangmanKey == true) { // You've won medium already
                         GMdialogue = "";
                     }
                     GamePlay.Talk($"Would you like to play hangman?{GMdialogue}\n");
@@ -333,9 +335,10 @@ namespace CaveAdventure
             public static void Thief() {
                 ThievesEncounter = 1;
                 int score = 0;
+                int rounds = 0;
 
                 Console.Clear();
-                Console.WriteLine("As you exit a nimble thief starts picking your pockets, and you catch him in the midst of it!");
+                Console.WriteLine("As you exit the building a nimble thief starts picking your pockets, and you catch him in the midst of it!");
                 Console.WriteLine("What do you do? (Write a VERB)\n");
 
                 string verb = Console.ReadLine().ToLower();
@@ -361,9 +364,26 @@ namespace CaveAdventure
                     "scissor"
                     };
 
-                    int randomIndex = new Random().Next(rps.Count); // Take a random number
-                    string ThiefChoice = rps[randomIndex]; // Pick option from list using random number
+                    int randomIndex = 1;
+                    string ThiefChoice = "rock";
+                    int notRandom = 0;
 
+                    // Make the thief choose rock, paper, scissor, rock, paper, scissor, repeat etc
+                    if (rounds > 5) { // If we've played more than 5 rounds, make the game predictable
+                        
+                        notRandom++; // Increase by 1 for each round after 5 rounds played
+                        randomIndex = notRandom; // Make the game use the index that is not random
+
+                        if (notRandom == 4) { // If we were to roll around to four, go back to one, as we only have 3 things in the list
+                            notRandom = 1;
+                        }
+
+                    } else { // If less than 5 rounds played, pick one randomly
+                        randomIndex = new Random().Next(rps.Count); // Take a random number
+                        ThiefChoice = rps[randomIndex]; // Pick option from list using random number
+                    }
+
+                    rounds++; // Amount of rounds played
                     if (ThiefChoice == UserChoice) { // if choices are the same, tie
                         Talk($"Ah darn, you picked {ThiefChoice} aswell! It's a tie!");
                         GameStart();
@@ -395,9 +415,10 @@ namespace CaveAdventure
                         Console.WriteLine($"You beat the thief's {ThiefChoice} with your {UserChoice}!");
                         if (score == 3) {
                             Talk("Oh geez I'm getting tired of this. I'm off!\n");
-                            Console.WriteLine("The thief runs away, dropping a key on the ground before you. Wow, that was brave of you.\n");
+                            Console.WriteLine("The thief runs away, dropping a key on the ground before you. Wow, that was brave of you.");
                             BraveKey = true;
-
+                            Console.WriteLine("\n\nPress any key to continue..\n");
+                            Console.ReadLine();
                             Outside();
                         } else {
                             GameStart();
