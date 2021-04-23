@@ -9,9 +9,10 @@ namespace CaveAdventure
     {
         static void Main(string[] args)
         {
-            
+            /*
             GamePlay.StartSetup();
             GamePlay.Intro();
+            */
             GamePlay.Outside();
             //GamePlay.Thief();
             //Mathgame.MathgameStart(); // For testing
@@ -58,6 +59,11 @@ namespace CaveAdventure
                 Console.ForegroundColor = ConsoleColor.Green;
                 writeSlow(msg);
                 Console.ResetColor();
+            }
+
+            public static void AwaitInput() {
+                Console.WriteLine("\n\nPress any key to continue..\n");
+                Console.ReadLine();
             }
 
             public static void StartSetup()
@@ -116,25 +122,12 @@ namespace CaveAdventure
                     return data;
                 }
             }
-            public static void Navigation() { // Obsolete?
-                Console.Write("Where do you want to go next?");
-                var input = Console.ReadLine();
-            }
             public static void Nothing() {
                 Console.WriteLine("Nothing interesting happens.");
             }
             public static void Outside() {
-
-                if (ThievesEncounter == 0) { // Random encounter chance to run into the thief encounter
-                    var chance = new Random().Next(0, 10);
-
-                    if (chance > 5) {
-                        Thief();
-                    }
-                }
-
                 Console.Clear();
-                Console.WriteLine("You're outside of your HOUSE.\nYou can go to your house, the bar, graveyard or cave.");
+                Console.WriteLine("You're outside of your house.\nYou can go to your house, the bar, graveyard or cave.");
                 Console.WriteLine("What would you like to do?\n");
                 String action = Console.ReadLine().ToLower();
 
@@ -169,7 +162,7 @@ namespace CaveAdventure
                 }
 
                 void act() {
-                    if (action.Contains("right")) {
+                    if (action.Contains("right") || action.Contains("wardrobe")) {
                         Console.WriteLine("You face the WARDROBE. In front of you is a PAINTING of your grand-grand-grand-father and your WARDROBE is underneath. Maybe it's worth taking an extra LOOK at?");
                         Wait();
                     } else if (action.Contains("wardrobe")) {
@@ -178,7 +171,7 @@ namespace CaveAdventure
                     } else if (action.Contains("painting") || action.Contains("search") || action.Contains("look")) {
                         Console.WriteLine("You search the painting. On the back is an old note your grandfather left you.");
                         Console.Write($"\n-----------------------------------------------------------");
-                        Console.Write("\nTO {name}, FROM GRAMPA\n\n");
+                        Console.Write($"\nTO {Name}, FROM GRAMPA\n\n");
                         Console.Write("\nI KNOW YOU DIDN'T LIKE YOUR DAD, BUT HE WAS A GOOD MAN.");
                         Console.Write("\nI KNOW YOU NEVER VISIT HIS GRAVE- ");
                         Console.Write("\nBUT WHEN YOU FEEL READY YOU SHOULD.");
@@ -238,7 +231,16 @@ namespace CaveAdventure
                 } else if (option.Contains("hangman") || option.Contains("mark")) {
                     HangManDialogue();
                 } else if (option.Contains("exit") || option.Contains("back")) {
-                    Exit();
+
+                    if (ThievesEncounter == 0) { // Random encounter chance to run into the thief encounter
+                        var chance = new Random().Next(0, 10);
+                        if (chance > 5) {
+                            Thief();
+                        }
+                    } else {
+                        Exit();
+                    }
+                    
                 } else {
                     Nothing();
                 }
@@ -281,26 +283,37 @@ namespace CaveAdventure
                     }
                 }
 
-                void BartenderDialogue() { // Because every tavern needs a bartender
-                    GamePlay.Talk("Hello there, what can I do for ya?");
+                void BartenderDialogue(string error = "") { // Because every tavern needs a bartender
+
+                    if (error != "") {
+                        GamePlay.Talk(error);
+                    } else {
+                        GamePlay.Talk("Hello there, what can I do for ya?\n");
+                    }
+                    
                     Console.WriteLine("1) Beer, 2) Gossip, 3) Beer");
                     var option = Console.ReadLine().ToLower();
 
-                    if (option.Contains("beer") || option.Contains("3") || option.Contains("drink")) {
+                    if (option.Contains("beer") || option.Contains("3") || option.Contains("drink") || option.Contains("1")) {
                         Console.WriteLine("The bartender gives you a beer and you swig it fast.");
                         Drunk++;
                         if (Drunk <= 2) {
                             Console.WriteLine("Maybe it's time to stop now.");
+                            AwaitInput();
                             Tavern();
                         } else if (Drunk == 5) {
                             Console.Clear();
                             Console.WriteLine("Oh dear, you pass out. Somehow you end up at your house.");
                             Drunk = 0;
+                            AwaitInput();
                             House();
                         } else {
                             Console.WriteLine("You feel fine, for now.");
+                            AwaitInput();
                             Tavern();
                         }
+                    } else {
+                        BartenderDialogue("Sorry I didn't quite catch that..what can I help you with?\n");
                     }
                 }
 
@@ -458,23 +471,27 @@ namespace CaveAdventure
                 Console.WriteLine("What would you like to do?\n");
                 String input = Console.ReadLine().ToLower();
                 if (input.Contains("papa") || input.Contains("dad")) {
+
                     Console.WriteLine("After a few minutes of searching you find your dad's grave.");
                     Console.WriteLine(gravestone);
+                    GraveStone();
 
-                    Console.WriteLine("You look at the grave. What do you do?\n");
-
-                    var input2 = Console.ReadLine().ToLower();
-                    if (input2.Contains("behind") || input2.Contains("search")) {
-                        Console.WriteLine("You find a key lying just behind the gravestone. Perhaps this will become important later?");
-                        Console.WriteLine("You say a prayer and leave.");
-                        GraveKey = true;
-                        Graveyard();
-                    } else if (input.Contains("exit")|| input.Contains("back")) { 
-                        Graveyard();
-                    } else {
-                        Console.WriteLine("Nothing interesting happens.");
-                        Graveyard();
+                    void GraveStone() {
+                        Console.WriteLine("You look at the grave. What do you do?\n");
+                        var input2 = Console.ReadLine().ToLower();
+                        if (input2.Contains("behind") || input2.Contains("search")) {
+                            Console.WriteLine("You find a key lying just behind the gravestone. Perhaps this will become important later?");
+                            Console.WriteLine("You say a prayer and leave.");
+                            GraveKey = true;
+                            GraveStone();
+                        } else if (input.Contains("exit")|| input.Contains("back")) { 
+                            Graveyard();
+                        } else {
+                            Console.WriteLine("Nothing interesting happens.");
+                            GraveStone();
+                        }
                     }
+
                 } else if (input.Contains("exit") || input.Contains("back")) {
                     Exit();
                 } else {

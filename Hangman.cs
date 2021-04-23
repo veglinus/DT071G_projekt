@@ -28,6 +28,7 @@ public static class Hangman
 
             string blankstring = ""; // Will eventually become the blanket out _ _ _ _ _ word
             string tries = ""; // What the user has tried before
+            string StringTries = ""; // Will be used for spacing dialogue
             int lives = 7; // How many lives left, standard 7
 
             if (blankstring == "") { // Blanks out the word
@@ -44,6 +45,7 @@ public static class Hangman
                 if (lives == 0) { // Check if you have lives left
                     stickman();
                     GamePlay.Talk("You ran out of lives! Sorry!");
+                    GamePlay.Talk($"The correct word was: {chosenword}");
                     GameEnd();
                     
                 } else if (!blankstring.Contains("_")) { // No underscores means that the entire word is there, = user has won
@@ -66,11 +68,15 @@ public static class Hangman
 
                     stickman(); // To draw the stickman
                     //GamePlay.Talk($"Word is: {chosenword}, blanked out: {blankstring}\nTry any letter!\n"); // Debug
-                    GamePlay.Talk($"{chosenWordSpaced}\n\nTry a letter or an entire word!\n");
 
+                    
                     if (tries != "") { // If this isn't the first input, show list of tried letters
-                    GamePlay.Talk($"You've tried: {tries}\n");
+                        StringTries = ($" You've tried: {tries}\n");
                     }
+
+                    GamePlay.Talk($"{chosenWordSpaced}\n\nTry a letter or an entire word!{StringTries}\n");
+
+
 
                     var guess = Console.ReadLine().ToUpper(); // The user guesses
 
@@ -123,100 +129,92 @@ public static class Hangman
 
                 if (decision.Contains("yes")) {
                     Console.Clear();
-                    MainActivity();
+                    HangmanStart();
                 } else {
-                    GamePlay.Exit();
+                    GamePlay.Tavern();
                 }
             }
 
 
-            void stickman() { // Logic for typing out mr stickmans limbs depending on number of lives left
-                string thestickman = @"
-                /----|
-                |
-                |
-                |
-                |
-                "; // Default state
+void stickman() { // Logic for typing out mr stickmans limbs depending on number of lives left
+string thestickman = @"
+/----|
+|
+|
+|
+|"; // Default state
 
-                switch (lives)
-                {
-                case 6:
-                thestickman = @"
-                /----|
-                |    O
-                |
-                |
-                |
-                ";
-                break;
-                    
-                case 5:
-                thestickman = @"
-                /----|
-                |    O
-                |    |
-                |
-                |
-                ";
-                break;
+switch (lives)
+{
+case 6:
+thestickman = @"
+/----|
+|    O
+|
+|
+|";
+break;
+    
+case 5:
+thestickman = @"
+/----|
+|    O
+|    |
+|
+|";
+break;
 
-                case 4:
-                thestickman = @"
-                /----|
-                |    O
-                |    | -
-                |   
-                |
-                ";
-                break;
+case 4:
+thestickman = @"
+/----|
+|    O
+|    | -
+|   
+|";
+break;
 
-                case 3:
-                thestickman = @"
-                /----|
-                |    O
-                |    | -
-                |     \
-                |
-                ";
-                break;
+case 3:
+thestickman = @"
+/----|
+|    O
+|    | -
+|     \
+|";
+break;
 
-                case 2:
-                thestickman = @"
-                /----|
-                |    O
-                |  - | -
-                |     \
-                |
-                ";
-                break;
+case 2:
+thestickman = @"
+/----|
+|    O
+|  - | -
+|     \
+|";
+break;
 
-                case 1:
-                thestickman = @"
-                /----|
-                |    O
-                |  - | -
-                |   / \
-                |
-                ";
-                break;
+case 1:
+thestickman = @"
+/----|
+|    O
+|  - | -
+|   / \
+|";
+break;
 
-                case 0:
-                thestickman = @"
-                The stickman has died.
-                /----|
-                | 
-                |
-                |
-                | 0 - c
-                ";
-                break;
-                    
-                default:
-                break;
-                }
-                Console.WriteLine(thestickman);
-            }
+case 0:
+thestickman = @"
+The stickman has died.
+/----|
+| 
+|
+|
+| 0 - c";
+break;
+    
+default:
+break;
+}
+Console.WriteLine(thestickman);
+}
         }
         catch (System.Exception)
         {
