@@ -332,6 +332,7 @@ namespace CaveAdventure
             }
             public static void Thief() {
                 ThievesEncounter = 1;
+                int score = 0;
 
                 Console.Clear();
                 Console.WriteLine("As you exit a nimble thief starts picking your pockets, and you catch him in the midst of it!");
@@ -342,13 +343,14 @@ namespace CaveAdventure
                 Console.WriteLine($"You {verb} the thief, he's shocked!");
                 Talk($"Wha?! What did you do that for?! Don't you know {verb} is illegal here?");
                 Talk("Tell you what, if you defeat me in a game I might let you go..");
-                Talk("So what will it be..? ");
+                Talk("So what will it be..?");
+                GameStart();
 
                 void GameStart() {
-                    Talk("Rock, paper, or scissor?");
+                    Talk($"Rock, paper, or scissor? Score: {score}\n");
 
                     string UserChoice = Console.ReadLine().ToLower();
-                    if (UserChoice != "rock" || UserChoice != "paper" || UserChoice != "scissor") { // Validation for input
+                    if (UserChoice != "rock" && UserChoice != "paper" && UserChoice != "scissor") { // Validation for input
                         Console.WriteLine("That's not a valid input. Let's try that again.\n");
                         GameStart();
                     }
@@ -358,8 +360,9 @@ namespace CaveAdventure
                     "paper",
                     "scissor"
                     };
-                    var randomIndex = new Random().Next(rps.Count); // Take a random number
-                    var ThiefChoice = UserChoice[randomIndex].ToString(); // Pick option from list using random number
+
+                    int randomIndex = new Random().Next(rps.Count); // Take a random number
+                    string ThiefChoice = rps[randomIndex]; // Pick option from list using random number
 
                     if (ThiefChoice == UserChoice) { // if choices are the same, tie
                         Talk($"{ThiefChoice}! Ah darn, you picked that aswell. Again!\n\n");
@@ -385,10 +388,24 @@ namespace CaveAdventure
                     }
 
                     void Win() {
+                        score++;
                         Console.WriteLine($"You beat the thief's {ThiefChoice} with your {UserChoice}!");
+                        if (score == 3) {
+                            Talk("Oh geez I'm getting tired of this. I'm off!\n");
+                            Console.WriteLine("The thief runs away, dropping a key on the ground before you. Wow, that was brave of you.\n");
+                            BraveKey = true;
+
+                            Outside();
+                        } else {
+                            GameStart();
+                        }
                     }
                     void Loss() {
+                        if (score > 0) {
+                            score--;
+                        }
                         Console.WriteLine($"The thief beats your {UserChoice} with his {ThiefChoice}..");
+                        GameStart();
                     }
                 }
             }
