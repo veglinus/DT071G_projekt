@@ -442,10 +442,9 @@ namespace CaveAdventure
                         Console.WriteLine($"You beat the thief's {ThiefChoice} with your {UserChoice}!");
                         if (score == 3) {
                             Talk("Oh geez I'm getting tired of this. I'm off!\n");
-                            Console.WriteLine("The thief runs away, dropping a key on the ground before you. Wow, that was brave of you.");
+                            Console.WriteLine("The thief runs away, dropping a key on the ground before you. You got the brave key!");
                             BraveKey = true;
-                            Console.WriteLine("\n\nPress any key to continue..\n");
-                            Console.ReadLine();
+                            AwaitInput();
                             Outside();
                         } else {
                             GameStart();

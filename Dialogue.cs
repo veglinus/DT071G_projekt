@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CaveAdventure
 {
-    public partial class GamePlay {
+    public partial class Dialogue {
         
     }
 }
