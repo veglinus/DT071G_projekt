@@ -22,11 +22,11 @@ public static class Mathgame
             var difficulty = Console.ReadLine().ToLower();
 
             if (difficulty.Contains("easy")) {
-                SetupGame(5000, 5, "Right, easy it is. Let's see how fast you can do some simple multiplication.");
+                SetupGame(8000, 5, "Right, easy it is. Let's see how fast you can do some simple multiplication.");
             } else if (difficulty.Contains("medium")) {
-                SetupGame(3000, 10, "This might be a bit of a challenge. Hang on.");
+                SetupGame(5000, 7, "This might be a bit of a challenge. Hang on.");
             } else if (difficulty.Contains("hard")) {
-                SetupGame(2500, 15, "I don't think you're gonna be good enough for this.");
+                SetupGame(4000, 10, "I don't think you're gonna be good enough for this.");
             } else {
                 GamePlay.Talk("Sorry, what was that?");
             }
@@ -77,17 +77,22 @@ public static class Mathgame
                     }
                     catch (System.Exception)
                     {
+                        Timer.Stop();
                         GamePlay.Talk($"Oh dear, that's wrong. The correct answer was {solution}.");
                         CheckForEnd();
                     }
 
                     void CheckForEnd() {
+                        Timer.Stop();
                         if (progress == rounds) { // klar med game
                             GamePlay.Talk($"Well done! You got {points} points out of {rounds}!");
                             GamePlay.Talk("Would you like to play again? (yes or no)\n");
                             var decision = Console.ReadLine();
 
                             if (difficulty == "medium" && points > 8 || difficulty == "hard" && points > 8) { // User wins coin
+
+                                GamePlay.Talk("You got the math key!");
+                                GamePlay.MathKey = true;
                                 // TODO: add reward coin
                             }
                             if (decision.Contains("yes")) {

@@ -50,6 +50,7 @@ public static class Hangman
                     
                 } else if (!blankstring.Contains("_")) { // No underscores means that the entire word is there, = user has won
                     GamePlay.Talk("Congratulations! You won!");
+                    Win();
                     GameEnd();
 
                 } else {
@@ -83,6 +84,7 @@ public static class Hangman
                     if (guess.Length > 1) { // User guessing a word, not just a letter
                         if (guess == chosenword) { // User guessed the word correctly
                             GamePlay.Talk("Congratulations! You won!");
+                            Win();
                             GameEnd();
                         } else {
                             incorrect();
@@ -121,6 +123,11 @@ public static class Hangman
                     }
                 }
 
+                void Win() {
+                    GamePlay.Talk("You got the hangman key!");
+                    GamePlay.HangmanKey = true;
+                    GamePlay.AwaitInput();
+                }
             }
 
             void GameEnd() {

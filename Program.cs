@@ -40,8 +40,8 @@ namespace CaveAdventure
             static int ThievesEncounter = 0;
 
             static bool BillyKey = false;
-            static bool HangmanKey = false;
-            static bool MathKey = false;
+            public static bool HangmanKey = false;
+            public static bool MathKey = false;
             static bool GraveKey = false;
             static bool BraveKey = false;
 
@@ -234,7 +234,7 @@ namespace CaveAdventure
 
                     if (ThievesEncounter == 0) { // Random encounter chance to run into the thief encounter
                         var chance = new Random().Next(0, 10);
-                        if (chance > 5) {
+                        if (chance > 5 || option.Contains("random")) { // If lucky or user forced the random option, go to thief scenario
                             Thief();
                         }
                     } else {
@@ -250,15 +250,15 @@ namespace CaveAdventure
 
                     GamePlay.Talk("Howdy there neighbor! Boy you look like you're having an adventure. Are you doing alright?");
                     if (Billy == 0) { // If this is the first talk
-                        GamePlay.Talk("Can I ask you for a favor? I havn't seen Nessie since last night. Give me a shout if you see her alright?");
+                        GamePlay.Talk("Can I ask you for a favor? I havn't seen Nessie since last night. Give me a shout if you see her alright? She loves when you whistle at her, so you can try that.");
                         Billy = 1;
-                        Console.WriteLine("You nod and leave Billy. (Press any key to continue)");
-                        Console.ReadLine();
+                        Console.WriteLine("You nod and leave Billy.");
+                        AwaitInput();
                         Tavern();
                     } else if (Billy == 1) { // Havn't seen dog yet
-                        GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet?");
-                        Console.WriteLine("You shake your head and leave Billy. (Press any key to continue)");
-                        Console.ReadLine();
+                        GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet? Just try whistling if you see her okay?");
+                        Console.WriteLine("You shake your head and leave Billy.");
+                        AwaitInput();
                         Tavern();
                     } else if (Billy == 2) { // You ahve seen the dog
                         GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet?");
@@ -267,8 +267,8 @@ namespace CaveAdventure
 
                         if (response.Contains("graveyard")) { // You give the correct response
                             GamePlay.Talk("She was at the graveyard?! Boy is she far from home. Thanks for helping out neighbor. Here's a little reward.");
-                            Console.WriteLine("You got an old key! (Press any key to continue)");
-                            Console.ReadLine();
+                            Console.WriteLine("You got an old key!");
+                            AwaitInput();
                             Billy = 3;
                             BillyKey = true;
                             Tavern();
@@ -276,8 +276,8 @@ namespace CaveAdventure
                             Tavern();
                         } else { // You give the wrong response
                             GamePlay.Talk("No.. I don't think she would be there. You probably saw something else.");
-                            Console.WriteLine("Billy looks sad. You better find his dog soon. You walk away. (Press any key to continue)");
-                            Console.ReadLine();
+                            Console.WriteLine("Billy looks sad. You better find his dog soon. You walk away.");
+                            AwaitInput();
                             Tavern();
                         }
                     }
@@ -297,7 +297,7 @@ namespace CaveAdventure
                     if (option.Contains("beer") || option.Contains("3") || option.Contains("drink") || option.Contains("1")) {
                         Console.WriteLine("The bartender gives you a beer and you swig it fast.");
                         Drunk++;
-                        if (Drunk <= 2) {
+                        if (Drunk >= 2) {
                             Console.WriteLine("Maybe it's time to stop now.");
                             AwaitInput();
                             Tavern();
@@ -309,6 +309,20 @@ namespace CaveAdventure
                             House();
                         } else {
                             Console.WriteLine("You feel fine, for now.");
+                            AwaitInput();
+                            Tavern();
+                        }
+                    } else if (option.Contains("gossip") || option.Contains("2")) {
+                        if (Billy == 0) {
+                            Talk("Have you heard about Billy's dog Nessie? Poor old thing ran away, I hope he finds her soon.");
+                            AwaitInput();
+                            Tavern();
+                        } else if (ThievesEncounter > 0) {
+                            Talk("There's been a pesky thief lingering around the village as of lately..Watch out for him!");
+                            AwaitInput();
+                            Tavern();
+                        } else {
+                            Talk("You looking to get through that cave outside of town sweetie? Try playing some of the games with the tavern guests, you might be surprised what you can get!");
                             AwaitInput();
                             Tavern();
                         }
