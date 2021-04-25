@@ -101,7 +101,7 @@ namespace CaveAdventure
             if (decision.Contains("yes") ||decision.Contains("ok")) {
                 Mathgame.MathgameStart();
             } else {
-                GamePlay.Exit();
+                GamePlay.Tavern();
             }
         }
 
@@ -115,7 +115,7 @@ namespace CaveAdventure
             if (decision.Contains("yes") ||decision.Contains("ok")) {
                 Hangman.HangmanStart();
             } else {
-                GamePlay.Exit();
+                GamePlay.Tavern();
             }
         }
     }
