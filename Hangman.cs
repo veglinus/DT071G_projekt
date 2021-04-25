@@ -83,7 +83,7 @@ public static class Hangman
                     if (guess.Length > 1) { // User guessing a word, not just a letter
                         if (guess == chosenword) { // User guessed the word correctly
                             GamePlay.Talk("Congratulations! You won!");
-                            System.Environment.Exit(1);
+                            GameEnd();
                         } else {
                             incorrect();
                         }
