@@ -29,22 +29,22 @@ namespace CaveAdventure
     {
             public static string Name = "adventurer"; // Used for name
             public static string Catchphrase = "Cowabunga!"; // Catchphrase, used later
-            static int Billy = 0; // Billy dialogue progress
-/*
-            static int Gamemaster = 0; // See if we've won yet
-            static int HangmanScore = 0; // See if we've won yet */
+            public static int Billy = 0; // Billy dialogue progress
             static string Position = "Outside"; // Standard position of player
             private static System.Timers.Timer Timer; // Timer for Mathgame
-            static int Drunk = 0;
+            public static int Drunk = 0; // Used for drunkness
+            public static int ThievesEncounter = 0;
 
-            static int ThievesEncounter = 0;
 
-            static bool BillyKey = false;
+            // All the keys needed to progress the game
+            public static bool BillyKey = false;
             public static bool HangmanKey = false;
             public static bool MathKey = false;
-            static bool GraveKey = false;
-            static bool BraveKey = false;
+            public static bool GraveKey = false;
+            public static bool BraveKey = false;
 
+
+            // General functions
             public static void writeSlow(string text)
             {
                 Console.Write("\n");
@@ -54,17 +54,20 @@ namespace CaveAdventure
                     Thread.Sleep(0);
                 }
             }
-
             public static void Talk(string msg) {
                 Console.ForegroundColor = ConsoleColor.Green;
                 writeSlow(msg);
                 Console.ResetColor();
             }
-
             public static void AwaitInput() {
                 Console.WriteLine("\n\nPress any key to continue..\n");
                 Console.ReadLine();
             }
+            public static void Nothing() {
+                Console.WriteLine("Nothing interesting happens.");
+            }
+            // End of general functions
+
 
             public static void StartSetup()
             {
@@ -105,14 +108,6 @@ namespace CaveAdventure
                 Outside();
             }
 
-            public static void ExitContext() {
-                switch (Position)
-                {
-                    default:
-                    Outside();
-                    break;
-                }
-            }
             public static string UserInput() {
                 var data = Console.ReadLine().ToLower();
                 if (data.Contains("exit") || data.Contains("back")) {
@@ -122,9 +117,7 @@ namespace CaveAdventure
                     return data;
                 }
             }
-            public static void Nothing() {
-                Console.WriteLine("Nothing interesting happens.");
-            }
+
             public static void Outside() {
                 Console.Clear();
                 Console.WriteLine("You're outside of your house.\nYou can go to your house, the bar, graveyard or cave.");
@@ -222,20 +215,20 @@ namespace CaveAdventure
                 var option = Console.ReadLine().ToLower();
 
                 if (option.Contains("billy")) { // Choose who to speak to
-                    BillyDialogue();
+                    new Dialogue().Billy();
                 } else if (option.Contains("bartender")) {
                     Console.WriteLine("You approach the bartender.");
-                    BartenderDialogue();
+                    new Dialogue().Bartender();
                 } else if (option.Contains("mathematician") || option.Contains("dessie")) {
-                    MathematicianDialogue();
+                    new Dialogue().Mathematician();
                 } else if (option.Contains("hangman") || option.Contains("mark")) {
-                    HangManDialogue();
+                    new Dialogue().HangMan();
                 } else if (option.Contains("exit") || option.Contains("back")) {
 
                     if (ThievesEncounter == 0) { // Random encounter chance to run into the thief encounter
                         var chance = new Random().Next(0, 10);
                         if (chance > 5 || option.Contains("random")) { // If lucky or user forced the random option, go to thief scenario
-                            Thief();
+                            new ThiefEncounter().Thief();
                         }
                     } else {
                         Exit();
@@ -243,221 +236,6 @@ namespace CaveAdventure
                     
                 } else {
                     Nothing();
-                }
-
-                void BillyDialogue() { // Dialogue for Billy
-                    Console.WriteLine("You approach your neighbor Billy!");
-
-                    GamePlay.Talk("Howdy there neighbor! Boy you look like you're having an adventure. Are you doing alright?");
-                    if (Billy == 0) { // If this is the first talk
-                        GamePlay.Talk("Can I ask you for a favor? I havn't seen Nessie since last night. Give me a shout if you see her alright? She loves when you whistle at her, so you can try that.");
-                        Billy = 1;
-                        Console.WriteLine("You nod and leave Billy.");
-                        AwaitInput();
-                        Tavern();
-                    } else if (Billy == 1) { // Havn't seen dog yet
-                        GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet? Just try whistling if you see her okay?");
-                        Console.WriteLine("You shake your head and leave Billy.");
-                        AwaitInput();
-                        Tavern();
-                    } else if (Billy == 2) { // You ahve seen the dog
-                        GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet?");
-                        Console.WriteLine("Where did you see the dog?");
-                        var response = Console.ReadLine().ToLower();
-
-                        if (response.Contains("graveyard")) { // You give the correct response
-                            GamePlay.Talk("She was at the graveyard?! Boy is she far from home. Thanks for helping out neighbor. Here's a little reward.");
-                            Console.WriteLine("You got an old key!");
-                            AwaitInput();
-                            Billy = 3;
-                            BillyKey = true;
-                            Tavern();
-                        } else if (option.Contains("exit") || option.Contains("back")) {
-                            Tavern();
-                        } else { // You give the wrong response
-                            GamePlay.Talk("No.. I don't think she would be there. You probably saw something else.");
-                            Console.WriteLine("Billy looks sad. You better find his dog soon. You walk away.");
-                            AwaitInput();
-                            Tavern();
-                        }
-                    }
-                }
-
-                void BartenderDialogue(string error = "") { // Because every tavern needs a bartender
-
-                    if (error != "") {
-                        GamePlay.Talk(error);
-                    } else {
-                        GamePlay.Talk("Hello there, what can I do for ya?\n");
-                    }
-                    
-                    Console.WriteLine("1) Beer, 2) Gossip, 3) Beer");
-                    var option = Console.ReadLine().ToLower();
-
-                    if (option.Contains("beer") || option.Contains("3") || option.Contains("drink") || option.Contains("1")) {
-                        Console.WriteLine("The bartender gives you a beer and you swig it fast.");
-                        Drunk++;
-                        if (Drunk >= 2) {
-                            Console.WriteLine("Maybe it's time to stop now.");
-                            AwaitInput();
-                            Tavern();
-                        } else if (Drunk == 5) {
-                            Console.Clear();
-                            Console.WriteLine("Oh dear, you pass out. Somehow you end up at your house.");
-                            Drunk = 0;
-                            AwaitInput();
-                            House();
-                        } else {
-                            Console.WriteLine("You feel fine, for now.");
-                            AwaitInput();
-                            Tavern();
-                        }
-                    } else if (option.Contains("gossip") || option.Contains("2")) {
-                        if (Billy == 0) {
-                            Talk("Have you heard about Billy's dog Nessie? Poor old thing ran away, I hope he finds her soon.");
-                            AwaitInput();
-                            Tavern();
-                        } else if (ThievesEncounter > 0) {
-                            Talk("There's been a pesky thief lingering around the village as of lately..Watch out for him!");
-                            AwaitInput();
-                            Tavern();
-                        } else {
-                            Talk("You looking to get through that cave outside of town sweetie? Try playing some of the games with the tavern guests, you might be surprised what you can get!");
-                            AwaitInput();
-                            Tavern();
-                        }
-                    } else {
-                        BartenderDialogue("Sorry I didn't quite catch that..what can I help you with?\n");
-                    }
-                }
-
-                void MathematicianDialogue() { // TO start Mathgame
-                    String GMdialogue = " There might be something in it for you if you complete the medium difficulty..";
-                    if (MathKey == true) { // You've already won medium
-                        GMdialogue = "";
-                    }
-                    GamePlay.Talk($"Would you like to play a game?{GMdialogue}\n");
-                    var decision = Console.ReadLine();
-                    if (decision.Contains("yes") ||decision.Contains("ok")) {
-                        Mathgame.MathgameStart();
-                    } else {
-                        Exit();
-                    }
-                }
-
-                void HangManDialogue() {
-                    String GMdialogue = " There might be something in it for you if you complete my game..";
-                    if (HangmanKey == true) { // You've won medium already
-                        GMdialogue = "";
-                    }
-                    GamePlay.Talk($"Would you like to play hangman?{GMdialogue}\n");
-                    var decision = Console.ReadLine();
-                    if (decision.Contains("yes") ||decision.Contains("ok")) {
-                        Hangman.HangmanStart();
-                    } else {
-                        Exit();
-                    }
-                }
-            }
-            public static void Thief() {
-                ThievesEncounter = 1;
-                int score = 0;
-                int rounds = 0;
-
-                Console.Clear();
-                Console.WriteLine("As you exit the building a nimble thief starts picking your pockets, and you catch him in the midst of it!");
-                Console.WriteLine("What do you do? (Write a VERB)\n");
-
-                string verb = Console.ReadLine().ToLower();
-                Console.Clear();
-                Console.WriteLine($"You {verb} the thief, he's shocked!");
-                Talk($"Wha?! What did you do that for?! Don't you know {verb} is illegal here?");
-                Talk("Tell you what, if you defeat me in a game I might let you go..");
-                Talk("So what will it be..?");
-                GameStart();
-
-                void GameStart() {
-                    Talk($"Rock, paper, or scissor? Score: {score}\n");
-
-                    string UserChoice = Console.ReadLine().ToLower();
-                    if (UserChoice != "rock" && UserChoice != "paper" && UserChoice != "scissor" && UserChoice != "cheat") { // Validation for input
-                        Console.WriteLine("That's not a valid input. Let's try that again.\n");
-                        GameStart();
-                    }
-
-                    List<string> rps = new List<string>(){ // List of possible choicse
-                    "rock",
-                    "paper",
-                    "scissor"
-                    };
-
-                    int randomIndex = 1;
-                    string ThiefChoice = "rock";
-                    int notRandom = 0;
-
-                    // Make the thief choose rock, paper, scissor, rock, paper, scissor, repeat etc
-                    if (rounds > 5) { // If we've played more than 5 rounds, make the game predictable
-                        
-                        notRandom++; // Increase by 1 for each round after 5 rounds played
-                        randomIndex = notRandom; // Make the game use the index that is not random
-
-                        if (notRandom == 4) { // If we were to roll around to four, go back to one, as we only have 3 things in the list
-                            notRandom = 1;
-                        }
-
-                    } else { // If less than 5 rounds played, pick one randomly
-                        randomIndex = new Random().Next(rps.Count); // Take a random number
-                        ThiefChoice = rps[randomIndex]; // Pick option from list using random number
-                    }
-
-                    rounds++; // Amount of rounds played
-                    if (ThiefChoice == UserChoice) { // if choices are the same, tie
-                        Talk($"Ah darn, you picked {ThiefChoice} aswell! It's a tie!");
-                        GameStart();
-                    } else if (UserChoice == "rock") {
-                        if (ThiefChoice == "scissor") {
-                            Win();
-                        } else {
-                            Loss();
-                        }
-                    } else if (UserChoice == "paper") {
-                        if (ThiefChoice == "rock") {
-                            Win();
-                        } else {
-                            Loss();
-                        }
-                    } else if (UserChoice == "scissor") {
-                        if (ThiefChoice == "paper") {
-                            Win();
-                        } else {
-                            Loss();
-                        }
-                    } else if (UserChoice == "cheat") { // to get past the event quickly
-                        Talk("What the?! How did you do that?");
-                        Win();
-                    }
-
-                    void Win() {
-                        score++;
-                        Console.WriteLine($"You beat the thief's {ThiefChoice} with your {UserChoice}!");
-                        if (score == 3) {
-                            Talk("Oh geez I'm getting tired of this. I'm off!\n");
-                            Console.WriteLine("The thief runs away, dropping a key on the ground before you. You got the brave key!");
-                            BraveKey = true;
-                            AwaitInput();
-                            Outside();
-                        } else {
-                            GameStart();
-                        }
-                    }
-                    void Loss() {
-                        if (score > 0) {
-                            score--;
-                        }
-                        Talk("Ha! Beat ya!");
-                        Console.WriteLine($"\nThe thief beats your {UserChoice} with his {ThiefChoice}..");
-                        GameStart();
-                    }
                 }
             }
             
