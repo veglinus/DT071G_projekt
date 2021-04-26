@@ -29,7 +29,7 @@ namespace CaveAdventure
             public static string Catchphrase {get; set;} = "Cowabunga!"; // Catchphrase, used later
             public static int Billy {get; set;} = 0; // Billy dialogue progress
             public static int Drunk {get; set;} = 0; // Used for drunkness
-            public static int ThievesEncounter {get; set;} = 0;
+            public static int ThievesEncounter {get; set;} = 0; // Used to track if thief has been met
 
             // All the keys needed to progress the game
             public static bool BillyKey {get; set;} = false;
@@ -56,7 +56,6 @@ namespace CaveAdventure
                     ThievesEncounter = Convert.ToInt32(saveData["ThievesEncounter"]);
 
                     //Console.WriteLine("Loaded this save data: " + jsonString);
-                    //Console.WriteLine("Billy should be 1, billy is: " + Billy);
                     Console.Clear();
                     Console.WriteLine("Loaded your savegame! (type reset outside to reset savedata)");
                 }
@@ -72,8 +71,8 @@ namespace CaveAdventure
                 Console.Write("\n");
                 foreach(char letter in text) {
                     Console.Write(letter);
-                    //Thread.Sleep(50);
-                    Thread.Sleep(0);
+                    Thread.Sleep(25);
+                    //Thread.Sleep(0);
                 }
             }
             public static void Talk(string msg) {
@@ -81,7 +80,7 @@ namespace CaveAdventure
                 writeSlow(msg);
                 Console.ResetColor();
             }
-            public static void AwaitInput() {
+            public static void AwaitInput() { // Used to await user input to continue code, good for forcing user to read
                 Console.WriteLine("\n\nPress any key to continue..\n");
                 Console.ReadLine();
             }
@@ -95,7 +94,7 @@ namespace CaveAdventure
                 // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to?pivots=dotnet-5-0
                 try
                 {
-                    var SaveData = new Dictionary<string, dynamic>() {
+                    var SaveData = new Dictionary<string, dynamic>() { // Get all current values of class and put them in a dictionary
                     {"BillyKey", BillyKey},
                     {"HangmanKey", HangmanKey},
                     {"MathKey", MathKey},
@@ -107,8 +106,8 @@ namespace CaveAdventure
                     {"ThievesEncounter", ThievesEncounter}
                 };
 
-                var jsonString = JsonConvert.SerializeObject(SaveData);
-                File.WriteAllText("saveData.json", jsonString);
+                var jsonString = JsonConvert.SerializeObject(SaveData); // Serialize into JSON
+                File.WriteAllText("saveData.json", jsonString); // Write file
                 Console.WriteLine("Saved game!"); 
                 }
                 catch (System.Exception)
@@ -120,14 +119,13 @@ namespace CaveAdventure
             public static void StartSetup()
             {
                 Console.WriteLine("Welcome adventurer! Before we begin, what is your name?\n");
-                var newName = Console.ReadLine();
-                if (newName != "") {
-                    Name = newName;
+                var newName = Console.ReadLine(); // Await user input
+                if (newName != "") { // Validate
+                    Name = newName; // Set username
                 } else {
                     Console.WriteLine("Sorry I didn't quite catch that, let's try again.");
                     StartSetup();
                 }
-                List<String> inventory = new List<String>();
 
                 Console.Clear();
                 writeSlow($"Hello {Name}, I'm your guide on this adventure. I will try to interpret your words into actions in this game.\nI am the voice inside your head and more.");
@@ -135,7 +133,7 @@ namespace CaveAdventure
                 Catchphrase = Console.ReadLine();
 
                 Console.Clear();
-                if(Catchphrase.EndsWith("!") || Catchphrase.EndsWith("."))
+                if(Catchphrase.EndsWith("!") || Catchphrase.EndsWith(".")) // Validation
                 {
                     Catchphrase = Catchphrase.Remove(Catchphrase.Length - 1, 1);  
                 }
@@ -146,14 +144,7 @@ namespace CaveAdventure
                 writeSlow($"You're a lone adventurer and wake up inside of your house. You've had many great adventures before in your life {Name}, but there has always been one that you havn't solved.");
                 writeSlow($"To the south-west of your house is a cave. There's a door with a number combination on it that you've never been able to figure out.");
                 writeSlow($"Perhaps someone in your town knows more?\nYou step outside your door, today is the day you get past that door.");
-                Console.WriteLine("\n\nPress any key to continue..\n");
-                Console.ReadLine();
-            }
-
-            public static void Exit() {
-                Console.Clear();
-                Console.Write("You leave.");
-                Outside();
+                AwaitInput();
             }
 
             public static string UserInput() {
@@ -166,7 +157,7 @@ namespace CaveAdventure
                 }
             }
 
-            public static void Outside() {
+            public static void Outside() { // Environment used the most
                 Console.Clear();
                 Console.WriteLine("You're outside of your house.\nYou can go to your house, the bar, graveyard or cave.");
                 Console.WriteLine("What would you like to do?\n");
@@ -174,7 +165,7 @@ namespace CaveAdventure
 
                 if (action.Contains("house")) {
                     House();
-                } else if (action.Contains("die")) {
+                } else if (action.Contains("die")) { // Actually has no function, just for fun
                     Console.WriteLine("You are dead!");
                     System.Environment.Exit(1);
                 } else if (action.Contains("tavern") ||action.Contains("bar")) {
@@ -183,21 +174,21 @@ namespace CaveAdventure
                     Graveyard();
                 } else if (action.Contains("cave")) {
                     Cave();
-                } else if (action.Contains("save")) {
+                } else if (action.Contains("save")) { // Forces game to save
                     Save();
                     AwaitInput();
                     Outside();
-                } else if (action.Contains("thief")) {
+                } else if (action.Contains("thief")) { // Forces the hidden thief encounter
                     new ThiefEncounter().Thief();
-                } else if (action.Contains("reset")) {
+                } else if (action.Contains("reset")) { // Resetting savegame
                     Console.WriteLine("Do you want to reset your game progress? You will need to make your character again etc. (yes or no)");
                     String action2 = Console.ReadLine().ToLower();
                     if (action2.Contains("yes")) {
                         try
                         {
-                            File.Delete("saveData.json");
+                            File.Delete("saveData.json"); // Delete savefile
                             Console.WriteLine("Savedata deleted. Please restart the application to start over.");
-                            System.Environment.Exit(1);
+                            System.Environment.Exit(1); // Exits
                         }
                         catch (System.Exception)
                         {
@@ -268,7 +259,7 @@ namespace CaveAdventure
 %  \|%________|
 %%%%
                     ");
-                    Talk("You found your dad's hidden treasure!");
+                    Talk($"{Catchphrase}! You found your dad's hidden treasure!");
                     Talk("Thank you for playing my game!\n");
 
                     Talk("THE END");
@@ -278,8 +269,8 @@ namespace CaveAdventure
                     //File.Delete("saveData.json");
                     //System.Environment.Exit(1);
 
-                } else {
-                    Console.WriteLine("You arrive at the opening to the cave. It's blocked by a door, which seems to need 3 keys to open. The door says:");
+                } else { // Doesn't have all of the keys
+                    Console.WriteLine("You arrive at the opening to the cave. It's blocked by a door, which seems to need 5 keys to open. The door says:");
                     Console.WriteLine("A KEY FOR THE KINDNESS OF YOUR HEART");
                     Console.WriteLine("A KEY FROM THE MOST LOVED ONE");
                     Console.WriteLine("A KEY FOR YOUR WISDOM, PERHAPS EVEN LUCK");
@@ -312,7 +303,7 @@ namespace CaveAdventure
                 } else if (option.Contains("bartender") || option.Contains("saga")) {
                     Console.WriteLine("You approach the bartender.");
                     new Dialogue().Bartender();
-                } else if (option.Contains("mathematician") || option.Contains("walter")) {
+                } else if (option.Contains("math") || option.Contains("walter")) {
                     new Dialogue().Mathematician();
                 } else if (option.Contains("hangman") || option.Contains("mark")) {
                     new Dialogue().HangMan();
@@ -330,7 +321,6 @@ namespace CaveAdventure
                     }
                     
                 } else {
-                    Nothing();
                     Tavern();
                 }
             }
@@ -352,21 +342,20 @@ namespace CaveAdventure
                 *       | *   **    * **   |**      **
                     \))/.,(//,,..,,\||(,,.,\\,.((//
                 ";
-                // if progress in story is correct
 
-                Console.WriteLine("You arrive at the graveyard. In front of you are several gravestones, maybe SOMEONE you know lies here.\n");
+                Console.WriteLine("You arrive at the graveyard. In front of you are several gravestones, maybe someone you know lies here.\n");
                 Console.WriteLine("What would you like to do?\n");
                 String input = Console.ReadLine().ToLower();
-                if (input.Contains("papa") || input.Contains("dad")) {
+                if (input.Contains("papa") || input.Contains("dad")) { // Story progress
 
                     Console.WriteLine("After a few minutes of searching you find your dad's grave.");
-                    Console.WriteLine(gravestone);
+                    Console.WriteLine(gravestone); // Writes gravestone to screen
                     GraveStone();
 
                     void GraveStone() {
                         Console.WriteLine("You look at the grave. What do you do?\n");
                         var input2 = Console.ReadLine().ToLower();
-                        if (input2.Contains("behind") || input2.Contains("search")) {
+                        if (input2.Contains("behind") || input2.Contains("search")) { // Gives gravekey
                             Console.WriteLine("You find a key lying just behind the gravestone. Perhaps this will become important later?");
                             Console.WriteLine("You say a prayer and leave.");
                             GraveKey = true;
@@ -379,14 +368,14 @@ namespace CaveAdventure
                             GraveStone();
                         }
                     }
-                } else if (input.Contains("whistle")) {
+                } else if (input.Contains("whistle")) { // Whistle to find Billy's dog nessie
                     Console.WriteLine("You find Nessie the dog! You should tell Billy about this.");
                     GamePlay.Billy = 2;
                     GamePlay.Save();
                     AwaitInput();
                     Graveyard();
                 } else if (input.Contains("exit") || input.Contains("back")) {
-                    Exit();
+                    Outside();
                 } else {
                     Console.WriteLine("Nothing interesting happens.");
                     Graveyard();

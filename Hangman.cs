@@ -5,12 +5,13 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using CaveAdventure;
 
+// Simple implementation of hangman
 public static class Hangman
 {
     public static void HangmanStart() {
         try
         {
-            List<string> dictionary = new List<string>(){
+            List<string> dictionary = new List<string>(){ // Dictionary of words to use
                 "HIPPOPOTAMUS",
                 "MICROWAVE",
                 "JACKPOT",
@@ -73,9 +74,6 @@ public static class Hangman
                     }
 
                     GamePlay.Talk($"{chosenWordSpaced}\n\nTry a letter or an entire word!{StringTries}\n");
-
-
-
                     var guess = Console.ReadLine().ToUpper(); // The user guesses
 
                     if (guess.Length > 1) { // User guessing a word, not just a letter
@@ -223,7 +221,7 @@ Console.WriteLine(thestickman);
         }
         catch (System.Exception)
         {
-            Console.WriteLine("You trip over Billy, causing him to have to start the game over.");
+            Console.WriteLine("You trip over Mark, causing him to have to start the game over.");
             HangmanStart();
         }
     }

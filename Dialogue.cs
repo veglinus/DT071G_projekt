@@ -1,5 +1,6 @@
 using System;
 
+// Used for all dialog options in the game
 namespace CaveAdventure
 {
     public partial class Dialogue {
