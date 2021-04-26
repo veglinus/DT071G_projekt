@@ -8,7 +8,8 @@ using CaveAdventure;
 // Simple implementation of hangman
 public static class Hangman
 {
-    public static void HangmanStart() {
+    public static void HangmanStart()
+    {
         try
         {
             List<string> dictionary = new List<string>(){ // Dictionary of words to use
@@ -29,7 +30,8 @@ public static class Hangman
             string StringTries = ""; // Will be used for spacing dialogue
             int lives = 7; // How many lives left, standard 7
 
-            if (blankstring == "") { // Blanks out the word
+            if (blankstring == "")
+            { // Blanks out the word
                 foreach (var letter in chosenword)
                 {
                     blankstring += "_";
@@ -38,61 +40,81 @@ public static class Hangman
             MainActivity();
 
 
-            void MainActivity() {
+            void MainActivity()
+            {
 
-                if (lives == 0) { // Check if you have lives left
+                if (lives == 0)
+                { // Check if you have lives left
                     stickman();
                     GamePlay.Talk("You ran out of lives! Sorry!");
                     GamePlay.Talk($"The correct word was: {chosenword}");
                     GameEnd();
-                    
-                } else if (!blankstring.Contains("_")) { // No underscores means that the entire word is there, = user has won
+
+                }
+                else if (!blankstring.Contains("_"))
+                { // No underscores means that the entire word is there, = user has won
                     GamePlay.Talk($"Congratulations! You won! The word was {chosenword}!");
                     Win();
                     GameEnd();
 
-                } else {
+                }
+                else
+                {
 
                     var chosenWordSpaced = "";
 
                     foreach (var letter in blankstring) // For putting spaces in the word
                     {
-                        if (chosenWordSpaced == "") {
+                        if (chosenWordSpaced == "")
+                        {
                             chosenWordSpaced += letter;
-                        } else {
+                        }
+                        else
+                        {
                             chosenWordSpaced += " " + letter;
                         }
-                        
+
                     }
 
                     stickman(); // To draw the stickman
-                    //GamePlay.Talk($"Word is: {chosenword}, blanked out: {blankstring}\nTry any letter!\n"); // Debug
+                                //GamePlay.Talk($"Word is: {chosenword}, blanked out: {blankstring}\nTry any letter!\n"); // Debug
 
-                    
-                    if (tries != "") { // If this isn't the first input, show list of tried letters
+
+                    if (tries != "")
+                    { // If this isn't the first input, show list of tried letters
                         StringTries = ($" You've tried: {tries}\n");
                     }
 
                     GamePlay.Talk($"{chosenWordSpaced}\n\nTry a letter or an entire word!{StringTries}\n");
                     var guess = Console.ReadLine().ToUpper(); // The user guesses
 
-                    if (guess.Length > 1) { // User guessing a word, not just a letter
-                        if (guess == chosenword) { // User guessed the word correctly
+                    if (guess.Length > 1)
+                    { // User guessing a word, not just a letter
+                        if (guess == chosenword)
+                        { // User guessed the word correctly
                             GamePlay.Talk($"Congratulations! You won! The word was {chosenword}!");
                             Win();
                             GameEnd();
-                        } else {
+                        }
+                        else
+                        {
                             incorrect();
                         }
-                    } else { // Single letter guess
-                        if (tries.Contains(guess)) { // Check if user has tried this letter before
+                    }
+                    else
+                    { // Single letter guess
+                        if (tries.Contains(guess))
+                        { // Check if user has tried this letter before
                             GamePlay.Talk($"You've already tried {guess}.");
                             MainActivity(); // restart
 
-                        } else { // New letter guess
+                        }
+                        else
+                        { // New letter guess
                             tries += guess; // Add guess to tried letters
 
-                            if (chosenword.Contains(guess)) { // Match was found
+                            if (chosenword.Contains(guess))
+                            { // Match was found
                                 GamePlay.Talk("That's correct!");
 
                                 foreach (Match match in Regex.Matches(chosenword, "(" + guess + ")")) // Find all occurances of the letter in the chosen word
@@ -104,13 +126,16 @@ public static class Hangman
                                 }
 
                                 MainActivity(); // start the function over when we've finished the foreach
-                            } else {
+                            }
+                            else
+                            {
                                 incorrect();
                             }
                         }
                     }
 
-                    void incorrect() {
+                    void incorrect()
+                    {
                         GamePlay.Talk("Oh no! That's wrong..");
                         Thread.Sleep(50);
                         lives--;
@@ -118,7 +143,8 @@ public static class Hangman
                     }
                 }
 
-                void Win() {
+                void Win()
+                {
                     GamePlay.Talk("You got the hangman key!\n");
                     GamePlay.HangmanKey = true;
                     GamePlay.Save();
@@ -126,98 +152,103 @@ public static class Hangman
                 }
             }
 
-            void GameEnd() {
+            void GameEnd()
+            {
                 GamePlay.Talk("Would you like to play again? (yes or no)\n");
                 var decision = Console.ReadLine();
 
-                if (decision.Contains("yes")) {
+                if (decision.Contains("yes"))
+                {
                     Console.Clear();
                     HangmanStart();
-                } else {
+                }
+                else
+                {
                     GamePlay.Tavern();
                 }
             }
 
 
-void stickman() { // Logic for typing out mr stickmans limbs depending on number of lives left
-string thestickman = @"
+            void stickman()
+            { // Logic for typing out mr stickmans limbs depending on number of lives left
+                string thestickman = @"
 /----|
 |
 |
 |
 |"; // Default state
 
-switch (lives)
-{
-case 6:
-thestickman = @"
+                switch (lives)
+                {
+                    case 6:
+                        thestickman = @"
 /----|
 |    O
 |
 |
 |";
-break;
-    
-case 5:
-thestickman = @"
+                        break;
+
+                    case 5:
+                        thestickman = @"
 /----|
 |    O
 |    |
 |
 |";
-break;
+                        break;
 
-case 4:
-thestickman = @"
+                    case 4:
+                        thestickman = @"
 /----|
 |    O
 |    | -
 |   
 |";
-break;
+                        break;
 
-case 3:
-thestickman = @"
+                    case 3:
+                        thestickman = @"
 /----|
 |    O
 |    | -
 |     \
 |";
-break;
+                        break;
 
-case 2:
-thestickman = @"
+                    case 2:
+                        thestickman = @"
 /----|
 |    O
 |  - | -
 |     \
 |";
-break;
+                        break;
 
-case 1:
-thestickman = @"
+                    case 1:
+                        thestickman = @"
 /----|
 |    O
 |  - | -
 |   / \
 |";
-break;
+                        break;
 
-case 0:
-thestickman = @"
+                    case 0:
+                        thestickman = @"
 The stickman has died.
 /----|
 | 
 |
 |
 | 0 - c";
-break;
-    
-default:
-break;
-}
-Console.WriteLine(thestickman);
-}
+                        break;
+
+                    default:
+                        break;
+                }
+                Console.WriteLine(thestickman);
+            }
         }
         catch (System.Exception)
         {
