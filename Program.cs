@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Collections.Generic;
-
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace CaveAdventure
 {
@@ -25,16 +28,28 @@ namespace CaveAdventure
         
     }
 
+    class SaveData {
+            public static string Name = "adventurer"; // Used for name
+            public static string Catchphrase = "Cowabunga!"; // Catchphrase, used later
+            public static int Billy = 0; // Billy dialogue progress
+            public static int Drunk = 0; // Used for drunkness
+            public static int ThievesEncounter = 0;
+
+            // All the keys needed to progress the game
+            public static bool BillyKey {get; set;} = false;
+            public static bool HangmanKey = false;
+            public static bool MathKey = false;
+            public static bool GraveKey = false;
+            public static bool BraveKey = false;
+    }
+
     public partial class GamePlay
     {
             public static string Name = "adventurer"; // Used for name
             public static string Catchphrase = "Cowabunga!"; // Catchphrase, used later
             public static int Billy = 0; // Billy dialogue progress
-            static string Position = "Outside"; // Standard position of player
-            private static System.Timers.Timer Timer; // Timer for Mathgame
             public static int Drunk = 0; // Used for drunkness
             public static int ThievesEncounter = 0;
-
 
             // All the keys needed to progress the game
             public static bool BillyKey = false;
@@ -68,6 +83,49 @@ namespace CaveAdventure
             }
             // End of general functions
 
+            // Saving
+            public static void save() {
+                // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to?pivots=dotnet-5-0
+                try
+                {
+                    var SaveData = new Dictionary<string, dynamic>() {
+                    {"BillyKey", BillyKey},
+                    {"HangmanKey", HangmanKey},
+                    {"MathKey", MathKey},
+                    {"GraveKey", GraveKey},
+                    {"BraveKey", BraveKey},
+                    {"Name", Name},
+                    {"Catchphrase", Catchphrase},
+                    {"Billy", Billy},
+                    {"ThievesEncounter", ThievesEncounter}
+                };
+
+                var jsonString = JsonSerializer.Serialize(SaveData);
+                File.WriteAllText("saveData.json", jsonString);
+                Console.WriteLine("Saved!"); 
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("Error saving.");
+                    throw;
+                }
+            }
+
+            public static void load() {
+                // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to?pivots=dotnet-5-0
+                try
+                {
+                    var jsonString = File.ReadAllText("saveData.json");
+                    var saveData = JObject.Parse(jsonString);
+                    Console.Write("\n\n" + saveData + "\n\n");
+                    //BillyKey = saveData.BillyKey;
+                    Console.WriteLine(SaveData.BillyKey);
+                }
+                catch (System.Exception)
+                {
+                    throw;
+                }
+            }
 
             public static void StartSetup()
             {
@@ -135,6 +193,14 @@ namespace CaveAdventure
                     Graveyard();
                 } else if (action.Contains("cave")) {
                     Cave();
+                } else if (action.Contains("save")) {
+                    save();
+                    AwaitInput();
+                    Outside();
+                } else if (action.Contains("load")) {
+                    load();
+                    AwaitInput();
+                    Outside();
                 } else {
                     Console.WriteLine("Sorry, I didn't quite catch that.");
                     Outside();
@@ -231,11 +297,12 @@ namespace CaveAdventure
                             new ThiefEncounter().Thief();
                         }
                     } else {
-                        Exit();
+                        Outside();
                     }
                     
                 } else {
                     Nothing();
+                    Tavern();
                 }
             }
             
