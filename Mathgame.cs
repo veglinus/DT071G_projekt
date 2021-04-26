@@ -22,20 +22,20 @@ public static class Mathgame
             var difficulty = Console.ReadLine().ToLower();
 
             if (difficulty.Contains("easy")) {
-                SetupGame(8000, 5, "Right, easy it is. Let's see how fast you can do some simple multiplication.");
+                SetupGame(8000, 5, difficulty, "Right, easy it is. Let's see how fast you can do some simple multiplication.");
             } else if (difficulty.Contains("medium")) {
-                SetupGame(5000, 7, "This might be a bit of a challenge. Hang on.");
+                SetupGame(5000, 7, difficulty, "This might be a bit of a challenge. Hang on.");
             } else if (difficulty.Contains("hard")) {
-                SetupGame(4000, 10, "I don't think you're gonna be good enough for this.");
+                SetupGame(4000, 10, difficulty, "I don't think you're gonna be good enough for this.");
             } else {
                 GamePlay.Talk("Sorry, what was that?");
             }
 
-            void SetupGame(int time, int rounds, string difficulty) {
+            void SetupGame(int time, int rounds, string difficulty, string talkdif) {
                 int progress = 0;
                 int points = 0;
 
-                GamePlay.Talk(difficulty);
+                GamePlay.Talk(talkdif);
                 GamePlay.Talk("Be quick! I'm an impatient man.");
                 NewRound();
 
@@ -55,12 +55,15 @@ public static class Mathgame
 
                     try
                     {
-                        int input = Convert.ToInt32(Console.ReadLine());
+                        string fullinput = Console.ReadLine();
                         Timer.Stop();
                         progress++;
+
+                        int input;
+                        Int32.TryParse(fullinput, out input);
                         //Console.WriteLine($"progress: {progress} out of {rounds}");
 
-                        if (input == solution) { // Correct answer
+                        if (input == solution || fullinput == "cheat") { // Correct answer
                     
                             if (timeout == true) { // But user too slow to 
                                 GamePlay.Talk("That's correct! But you were a bit too slow..");
@@ -68,32 +71,37 @@ public static class Mathgame
                                 GamePlay.Talk($"That's correct!");
                                 points++;
                             }
-                        
+
                         } else { // Wrong answer
                             GamePlay.Talk($"Oh dear, that's wrong. The correct answer was {solution}.");
                         }
 
                         CheckForEnd();
                     }
-                    catch (System.Exception)
+                    catch (System.Exception e)
                     {
                         Timer.Stop();
                         GamePlay.Talk($"Oh dear, that's wrong. The correct answer was {solution}.");
+                        //Console.WriteLine("\nError: " + e);
                         CheckForEnd();
                     }
 
                     void CheckForEnd() {
                         Timer.Stop();
                         if (progress == rounds) { // Game is done
+
+                            if ((difficulty == "medium" && points >= 5) || (difficulty == "hard" && points >= 6)) { // User wins key
+                                GamePlay.Talk("You got the math key!\n");
+                                GamePlay.MathKey = true;
+                                GamePlay.Save();
+                            } else {
+                                GamePlay.Talk("Unfortunately that wasn't enough to win my prize..");
+                            }
+
                             GamePlay.Talk($"Well done! You got {points} points out of {rounds}!");
                             GamePlay.Talk("Would you like to play again? (yes or no)\n");
                             var decision = Console.ReadLine();
 
-                            if (difficulty == "medium" && points > 5 || difficulty == "hard" && points > 7) { // User wins key
-                                GamePlay.Talk("You got the math key!");
-                                GamePlay.MathKey = true;
-                                GamePlay.Save();
-                            }
                             if (decision.Contains("yes")) { // Play again
                                 Console.Clear();
                                 MathgameStart();

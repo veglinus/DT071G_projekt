@@ -22,22 +22,22 @@ namespace CaveAdventure
                 GamePlay.AwaitInput();
                 GamePlay.Tavern();
             } else if (GamePlay.Billy == 2) { // You ahve seen the dog
-                GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet?");
-                Console.WriteLine("Where did you see the dog?");
+                GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet?\n");
+                Console.WriteLine("Where did you see the dog?\n");
                 var response = Console.ReadLine().ToLower();
 
                 if (response.Contains("graveyard")) { // You give the correct response
-                    GamePlay.Talk("She was at the graveyard?! Boy is she far from home. Thanks for helping out neighbor. Here's a little reward.");
+                    GamePlay.Talk("She was at the graveyard?! Boy is she far from home. Thanks for helping out neighbor. Here's a little reward.\n");
                     Console.WriteLine("You got an old key!");
-                    GamePlay.AwaitInput();
                     GamePlay.Billy = 3;
                     GamePlay.BillyKey = true;
                     GamePlay.Save();
+                    GamePlay.AwaitInput();
                     GamePlay.Tavern();
                 } else if (response.Contains("exit") || response.Contains("back")) {
                     GamePlay.Tavern();
                 } else { // You give the wrong response
-                    GamePlay.Talk("No.. I don't think she would be there. You probably saw something else.");
+                    GamePlay.Talk("No.. I don't think she would be there. You probably saw something else.\n");
                     Console.WriteLine("Billy looks sad. You better find his dog soon. You walk away.");
                     GamePlay.AwaitInput();
                     GamePlay.Tavern();

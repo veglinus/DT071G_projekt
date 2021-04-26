@@ -13,16 +13,13 @@ namespace CaveAdventure
     {
         static void Main(string[] args)
         {
-            /*
-            GamePlay.StartSetup();
-            GamePlay.Intro();
-            */
-            //GameState.load();
-            new GamePlay();
-            //GamePlay.Thief();
-            //Mathgame.MathgameStart(); // For testing
-            //Hangman.HangmanStart();
-            //System.Environment.Exit(1);
+            if (File.Exists("saveData.json")) { // Savefile exists
+                new GamePlay();
+            } else {
+                GamePlay.StartSetup();
+                GamePlay.Intro();
+                GamePlay.Outside();
+            }
         }
     }
 
@@ -42,22 +39,27 @@ namespace CaveAdventure
             public static bool BraveKey {get; set;} = false;
 
             public GamePlay() { // Constructor
-                var jsonString = File.ReadAllText("saveData.json");
-                Dictionary<string, dynamic> saveData = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonString);
-                
 
-                BillyKey = saveData["BillyKey"];
-                HangmanKey = saveData["HangmanKey"];
-                MathKey = saveData["MathKey"];
-                GraveKey = saveData["GraveKey"];
-                BraveKey = saveData["BraveKey"];
-                Name = saveData["Name"];
-                Catchphrase = saveData["Catchphrase"];
-                Billy = Convert.ToInt32(saveData["Billy"]);
-                ThievesEncounter = Convert.ToInt32(saveData["ThievesEncounter"]);
+                if (File.Exists("saveData.json")) { // If savefile exists
+                    var jsonString = File.ReadAllText("saveData.json");
+                    Dictionary<string, dynamic> saveData = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonString); // Convert into dictionary
+                    
+                    // Manually inject savedata into this objects variables.
+                    BillyKey = saveData["BillyKey"];
+                    HangmanKey = saveData["HangmanKey"];
+                    MathKey = saveData["MathKey"];
+                    GraveKey = saveData["GraveKey"];
+                    BraveKey = saveData["BraveKey"];
+                    Name = saveData["Name"];
+                    Catchphrase = saveData["Catchphrase"];
+                    Billy = Convert.ToInt32(saveData["Billy"]);
+                    ThievesEncounter = Convert.ToInt32(saveData["ThievesEncounter"]);
 
-                Console.WriteLine("Loaded this save data: " + jsonString);
-                Console.WriteLine("Billy should be 1, billy is: " + Billy);
+                    //Console.WriteLine("Loaded this save data: " + jsonString);
+                    //Console.WriteLine("Billy should be 1, billy is: " + Billy);
+                    Console.Clear();
+                    Console.WriteLine("Loaded your savegame! (type reset outside to reset savedata)");
+                }
                 
                 AwaitInput();
                 Outside();
