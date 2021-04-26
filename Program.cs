@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace CaveAdventure
 {
@@ -16,16 +17,13 @@ namespace CaveAdventure
             GamePlay.StartSetup();
             GamePlay.Intro();
             */
-            GamePlay.Outside();
+            //GameState.load();
+            new GamePlay();
             //GamePlay.Thief();
             //Mathgame.MathgameStart(); // For testing
             //Hangman.HangmanStart();
             //System.Environment.Exit(1);
         }
-    }
-
-    class Data {
-        
     }
 
     class SaveData {
@@ -45,18 +43,40 @@ namespace CaveAdventure
 
     public partial class GamePlay
     {
-            public static string Name = "adventurer"; // Used for name
-            public static string Catchphrase = "Cowabunga!"; // Catchphrase, used later
-            public static int Billy = 0; // Billy dialogue progress
-            public static int Drunk = 0; // Used for drunkness
-            public static int ThievesEncounter = 0;
+            public static string Name {get; set;} = "adventurer"; // Used for name
+            public static string Catchphrase {get; set;} = "Cowabunga!"; // Catchphrase, used later
+            public static int Billy {get; set;} = 0; // Billy dialogue progress
+            public static int Drunk {get; set;} = 0; // Used for drunkness
+            public static int ThievesEncounter {get; set;} = 0;
 
             // All the keys needed to progress the game
-            public static bool BillyKey = false;
-            public static bool HangmanKey = false;
-            public static bool MathKey = false;
-            public static bool GraveKey = false;
-            public static bool BraveKey = false;
+            public static bool BillyKey {get; set;} = false;
+            public static bool HangmanKey {get; set;} = false;
+            public static bool MathKey {get; set;} = false;
+            public static bool GraveKey {get; set;} = false;
+            public static bool BraveKey {get; set;} = false;
+
+            public GamePlay() { // Constructor
+                var jsonString = File.ReadAllText("saveData.json");
+                Dictionary<string, dynamic> saveData = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonString);
+                
+
+                BillyKey = saveData["BillyKey"];
+                HangmanKey = saveData["HangmanKey"];
+                MathKey = saveData["MathKey"];
+                GraveKey = saveData["GraveKey"];
+                BraveKey = saveData["BraveKey"];
+                Name = saveData["Name"];
+                Catchphrase = saveData["Catchphrase"];
+                Billy = Convert.ToInt32(saveData["Billy"]);
+                ThievesEncounter = Convert.ToInt32(saveData["ThievesEncounter"]);
+
+                Console.WriteLine("Loaded this save data: " + jsonString);
+                Console.WriteLine("Billy should be 1, billy is: " + Billy);
+                
+                AwaitInput();
+                Outside();
+            }
 
 
             // General functions
@@ -100,7 +120,7 @@ namespace CaveAdventure
                     {"ThievesEncounter", ThievesEncounter}
                 };
 
-                var jsonString = JsonSerializer.Serialize(SaveData);
+                var jsonString = JsonConvert.SerializeObject(SaveData);
                 File.WriteAllText("saveData.json", jsonString);
                 Console.WriteLine("Saved!"); 
                 }
@@ -110,23 +130,6 @@ namespace CaveAdventure
                     throw;
                 }
             }
-
-            public static void load() {
-                // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to?pivots=dotnet-5-0
-                try
-                {
-                    var jsonString = File.ReadAllText("saveData.json");
-                    var saveData = JObject.Parse(jsonString);
-                    Console.Write("\n\n" + saveData + "\n\n");
-                    //BillyKey = saveData.BillyKey;
-                    Console.WriteLine(SaveData.BillyKey);
-                }
-                catch (System.Exception)
-                {
-                    throw;
-                }
-            }
-
             public static void StartSetup()
             {
                 Console.WriteLine("Welcome adventurer! Before we begin, what is your name?\n");
@@ -197,10 +200,8 @@ namespace CaveAdventure
                     save();
                     AwaitInput();
                     Outside();
-                } else if (action.Contains("load")) {
-                    load();
-                    AwaitInput();
-                    Outside();
+                //} else if (action.Contains("load")) {
+                    //
                 } else {
                     Console.WriteLine("Sorry, I didn't quite catch that.");
                     Outside();
@@ -273,7 +274,7 @@ namespace CaveAdventure
                 String billyOption = "your neighbor Billy, "; // If user has interactions left with Billy
 
                 Console.Clear();
-                if (Billy != 3) { // Clear billy option when his quest is complete
+                if (Billy == 3) { // Clear billy option when his quest is complete
                     billyOption = "";
                 }
                 Console.WriteLine($"You arrive at the tavern. You see {billyOption}the bartender, Mark the hangman, Dessie the mathematician and a gang of thieves.\n");
@@ -295,6 +296,8 @@ namespace CaveAdventure
                         var chance = new Random().Next(0, 10);
                         if (chance > 5 || option.Contains("random")) { // If lucky or user forced the random option, go to thief scenario
                             new ThiefEncounter().Thief();
+                        } else {
+                            Outside();
                         }
                     } else {
                         Outside();
