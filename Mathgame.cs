@@ -84,25 +84,23 @@ public static class Mathgame
 
                     void CheckForEnd() {
                         Timer.Stop();
-                        if (progress == rounds) { // klar med game
+                        if (progress == rounds) { // Game is done
                             GamePlay.Talk($"Well done! You got {points} points out of {rounds}!");
                             GamePlay.Talk("Would you like to play again? (yes or no)\n");
                             var decision = Console.ReadLine();
 
-                            if (difficulty == "medium" && points > 8 || difficulty == "hard" && points > 8) { // User wins coin
-
+                            if (difficulty == "medium" && points > 5 || difficulty == "hard" && points > 7) { // User wins key
                                 GamePlay.Talk("You got the math key!");
                                 GamePlay.MathKey = true;
-                                // TODO: add reward coin
                             }
-                            if (decision.Contains("yes")) {
+                            if (decision.Contains("yes")) { // Play again
                                 Console.Clear();
                                 MathgameStart();
                             } else {
-                                GamePlay.Exit();
+                                GamePlay.Exit(); // Exit
                             }
 
-                        } else { // inte klar med game
+                        } else { // Not done with game yet
                             GamePlay.Talk($"Let's try another..");
                             NewRound();
                         }

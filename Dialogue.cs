@@ -12,12 +12,12 @@ namespace CaveAdventure
             if (GamePlay.Billy == 0) { // If this is the first talk
                 GamePlay.Talk("Can I ask you for a favor? I havn't seen Nessie since last night. Give me a shout if you see her alright? She loves when you whistle at her, so you can try that.");
                 GamePlay.Billy = 1;
-                Console.WriteLine("You nod and leave Billy.");
+                Console.WriteLine("\nYou nod and leave Billy.");
                 GamePlay.AwaitInput();
                 GamePlay.Tavern();
             } else if (GamePlay.Billy == 1) { // Havn't seen dog yet
                 GamePlay.Talk("Have you caught a glimpse of my dog Nessie yet? Just try whistling if you see her okay?");
-                Console.WriteLine("You shake your head and leave Billy.");
+                Console.WriteLine("\nYou shake your head and leave Billy.");
                 GamePlay.AwaitInput();
                 GamePlay.Tavern();
             } else if (GamePlay.Billy == 2) { // You ahve seen the dog

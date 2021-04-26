@@ -4,9 +4,5 @@ Run with: ```dotnet run```
 
 
 # TODO:
-
-Debug last of stickman
-
-More quest-characters
-
-Fix last cave
+Save savedata
+Handle saves
