@@ -3,12 +3,6 @@ using System.Threading;
 using System.Timers;
 using CaveAdventure;
 
-/*
-TODO:
-
-enter causes crash while waiting for number
-
-*/
 public static class Mathgame
 {
     private static System.Timers.Timer Timer;
@@ -82,7 +76,7 @@ public static class Mathgame
                     {
                         Timer.Stop();
                         GamePlay.Talk($"Oh dear, that's wrong. The correct answer was {solution}.");
-                        //Console.WriteLine("\nError: " + e);
+                        Console.WriteLine("\nError: " + e);
                         CheckForEnd();
                     }
 

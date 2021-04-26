@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Timers;
 using CaveAdventure;
 
 public partial class ThiefEncounter
@@ -79,7 +77,7 @@ public partial class ThiefEncounter
                 Loss();
             }
         } else if (UserChoice == "cheat") { // to get past the event quickly
-            GamePlay.Talk("What the?! How did you do that?");
+            GamePlay.Talk("What the?! How did you do that?\n");
             Win();
         }
 

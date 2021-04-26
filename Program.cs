@@ -175,7 +175,7 @@ namespace CaveAdventure
                 if (action.Contains("house")) {
                     House();
                 } else if (action.Contains("die")) {
-                    Console.WriteLine("You are dead! Game over.");
+                    Console.WriteLine("You are dead!");
                     System.Environment.Exit(1);
                 } else if (action.Contains("tavern") ||action.Contains("bar")) {
                     Tavern();
@@ -187,6 +187,8 @@ namespace CaveAdventure
                     Save();
                     AwaitInput();
                     Outside();
+                } else if (action.Contains("thief")) {
+                    new ThiefEncounter().Thief();
                 } else if (action.Contains("reset")) {
                     Console.WriteLine("Do you want to reset your game progress? You will need to make your character again etc. (yes or no)");
                     String action2 = Console.ReadLine().ToLower();
@@ -252,23 +254,45 @@ namespace CaveAdventure
             }
 
             public static void Cave() {
-                Console.WriteLine("You arrive at the opening to the cave. It's blocked by a door, which seems to need 3 keys to open. The door says:");
-                Console.WriteLine("A KEY FOR THE KINDNESS OF YOUR HEART");
-                Console.WriteLine("A KEY FROM THE MOST LOVED ONE");
-                Console.WriteLine("A KEY FOR YOUR WISDOM, PERHAPS EVEN LUCK");
-                Console.WriteLine("A KEY FOR KNOWLEDGE");
-                Console.WriteLine("AND A KEY FROM THE BRAVE");
-                Console.WriteLine("THY WHICH SITS ON ALL KEYS SHALL BE GREATLY REWARDED\n");
 
+                if (BillyKey == true && HangmanKey == true && MathKey == true && GraveKey == true && BraveKey == true) { // End of game
+                    GamePlay.Talk("You put all of the keys into the gate..");
 
-                var choice = UserInput();
-                if (choice == "Simsalabim") {
-                    // TODO: Ending
-                    GamePlay.Talk("Congratulations! You've won!");
-                } else if (choice.Contains("back") || choice.Contains("return") || choice.Contains("outside") || choice.Contains("exit")) {
-                    Outside();
+                    Console.WriteLine(@"
+/\____;;___\
+| /         /
+`. ())oo() .
+|\(%()*^^()^\
+%| |-%-------|
+% \ | %  ))   |
+%  \|%________|
+%%%%
+                    ");
+                    Talk("You found your dad's hidden treasure!");
+                    Talk("Thank you for playing my game!\n");
+
+                    Talk("THE END");
+                    Talk("CAVE ADVENTURE");
+                    Talk("By Linus Hvenfelt");
+
+                    //File.Delete("saveData.json");
+                    //System.Environment.Exit(1);
+
                 } else {
-                    Cave();
+                    Console.WriteLine("You arrive at the opening to the cave. It's blocked by a door, which seems to need 3 keys to open. The door says:");
+                    Console.WriteLine("A KEY FOR THE KINDNESS OF YOUR HEART");
+                    Console.WriteLine("A KEY FROM THE MOST LOVED ONE");
+                    Console.WriteLine("A KEY FOR YOUR WISDOM, PERHAPS EVEN LUCK");
+                    Console.WriteLine("A KEY FOR KNOWLEDGE");
+                    Console.WriteLine("AND A KEY FROM THE BRAVE");
+                    Console.WriteLine("THY WHICH SITS ON ALL KEYS SHALL BE GREATLY REWARDED\n");
+
+                    var choice = UserInput();
+                    if (choice.Contains("back") || choice.Contains("return") || choice.Contains("outside") || choice.Contains("exit")) {
+                        Outside();
+                    } else {
+                        Cave();
+                    }
                 }
             }
 
@@ -279,7 +303,7 @@ namespace CaveAdventure
                 if (Billy == 3) { // Clear billy option when his quest is complete
                     billyOption = "";
                 }
-                Console.WriteLine($"You arrive at the tavern. You see {billyOption}Saga the bartender, Mark the hangman, Walter the mathematician and a gang of thieves.\n");
+                Console.WriteLine($"You arrive at the tavern. You see {billyOption}Saga the bartender, Mark the hangman, Walter the mathematician and other random customers.\n");
                 Console.WriteLine("Who would you like to interact with?\n");
                 var option = Console.ReadLine().ToLower();
 
@@ -348,7 +372,7 @@ namespace CaveAdventure
                             GraveKey = true;
                             GamePlay.Save();
                             GraveStone();
-                        } else if (input.Contains("exit")|| input.Contains("back")) { 
+                        } else if (input2.Contains("exit")|| input2.Contains("back")) { 
                             Graveyard();
                         } else {
                             Console.WriteLine("Nothing interesting happens.");

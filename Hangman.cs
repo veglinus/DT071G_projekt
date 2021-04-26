@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Timers;
 using CaveAdventure;
 
 public static class Hangman
 {
-    private static System.Timers.Timer Timer;
-
     public static void HangmanStart() {
         try
         {
@@ -49,7 +46,7 @@ public static class Hangman
                     GameEnd();
                     
                 } else if (!blankstring.Contains("_")) { // No underscores means that the entire word is there, = user has won
-                    GamePlay.Talk("Congratulations! You won!");
+                    GamePlay.Talk($"Congratulations! You won! The word was {chosenword}!");
                     Win();
                     GameEnd();
 
@@ -83,7 +80,7 @@ public static class Hangman
 
                     if (guess.Length > 1) { // User guessing a word, not just a letter
                         if (guess == chosenword) { // User guessed the word correctly
-                            GamePlay.Talk("Congratulations! You won!");
+                            GamePlay.Talk($"Congratulations! You won! The word was {chosenword}!");
                             Win();
                             GameEnd();
                         } else {
@@ -124,7 +121,7 @@ public static class Hangman
                 }
 
                 void Win() {
-                    GamePlay.Talk("You got the hangman key!");
+                    GamePlay.Talk("You got the hangman key!\n");
                     GamePlay.HangmanKey = true;
                     GamePlay.Save();
                     GamePlay.AwaitInput();
