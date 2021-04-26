@@ -49,7 +49,7 @@ namespace CaveAdventure
             if (error != "") {
                 GamePlay.Talk(error);
             } else {
-                GamePlay.Talk("Hello there, what can I do for ya?\n");
+                GamePlay.Talk($"Hello there, what can I do for ya {GamePlay.Name}?\n");
             }
             
             Console.WriteLine("1) Beer, 2) Gossip, 3) Beer");
@@ -75,7 +75,7 @@ namespace CaveAdventure
                 }
             } else if (option.Contains("gossip") || option.Contains("2")) {
                 if (GamePlay.Billy == 0) {
-                    GamePlay.Talk("Have you heard about Billy's dog Nessie? Poor old thing ran away, I hope he finds her soon.");
+                    GamePlay.Talk("Have you heard about Billy's dog Nessie? Poor old thing ran away, I hope he finds her soon. Or else she might end up in that graveyard..");
                     GamePlay.AwaitInput();
                     GamePlay.Tavern();
                 } else if (GamePlay.ThievesEncounter > 0) {
@@ -92,7 +92,7 @@ namespace CaveAdventure
             }
         }
 
-        public void Mathematician() { // TO start Mathgame
+        public void Mathematician() { // To start Mathgame
             String GMdialogue = " There might be something in it for you if you complete the medium difficulty..";
             if (GamePlay.MathKey == true) { // You've already won medium
                 GMdialogue = "";
