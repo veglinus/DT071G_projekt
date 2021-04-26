@@ -12,6 +12,7 @@ namespace CaveAdventure
             if (GamePlay.Billy == 0) { // If this is the first talk
                 GamePlay.Talk("Can I ask you for a favor? I havn't seen Nessie since last night. Give me a shout if you see her alright? She loves when you whistle at her, so you can try that.");
                 GamePlay.Billy = 1;
+                GamePlay.Save();
                 Console.WriteLine("\nYou nod and leave Billy.");
                 GamePlay.AwaitInput();
                 GamePlay.Tavern();
@@ -31,6 +32,7 @@ namespace CaveAdventure
                     GamePlay.AwaitInput();
                     GamePlay.Billy = 3;
                     GamePlay.BillyKey = true;
+                    GamePlay.Save();
                     GamePlay.Tavern();
                 } else if (response.Contains("exit") || response.Contains("back")) {
                     GamePlay.Tavern();

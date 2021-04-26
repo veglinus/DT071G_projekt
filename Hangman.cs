@@ -126,6 +126,7 @@ public static class Hangman
                 void Win() {
                     GamePlay.Talk("You got the hangman key!");
                     GamePlay.HangmanKey = true;
+                    GamePlay.Save();
                     GamePlay.AwaitInput();
                 }
             }

@@ -7,7 +7,6 @@ using CaveAdventure;
 public partial class ThiefEncounter
 {
     public void Thief() {
-    GamePlay.ThievesEncounter = 1;
     int score = 0;
     int rounds = 0;
 
@@ -91,6 +90,8 @@ public partial class ThiefEncounter
                 GamePlay.Talk("Oh geez I'm getting tired of this. I'm off!\n");
                 Console.WriteLine("The thief runs away, dropping a key on the ground before you. You got the brave key!");
                 GamePlay.BraveKey = true;
+                GamePlay.ThievesEncounter = 1;
+                GamePlay.Save();
                 GamePlay.AwaitInput();
                 GamePlay.Outside();
             } else {

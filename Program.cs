@@ -26,21 +26,6 @@ namespace CaveAdventure
         }
     }
 
-    class SaveData {
-            public static string Name = "adventurer"; // Used for name
-            public static string Catchphrase = "Cowabunga!"; // Catchphrase, used later
-            public static int Billy = 0; // Billy dialogue progress
-            public static int Drunk = 0; // Used for drunkness
-            public static int ThievesEncounter = 0;
-
-            // All the keys needed to progress the game
-            public static bool BillyKey {get; set;} = false;
-            public static bool HangmanKey = false;
-            public static bool MathKey = false;
-            public static bool GraveKey = false;
-            public static bool BraveKey = false;
-    }
-
     public partial class GamePlay
     {
             public static string Name {get; set;} = "adventurer"; // Used for name
@@ -104,7 +89,7 @@ namespace CaveAdventure
             // End of general functions
 
             // Saving
-            public static void save() {
+            public static void Save() {
                 // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to?pivots=dotnet-5-0
                 try
                 {
@@ -122,7 +107,7 @@ namespace CaveAdventure
 
                 var jsonString = JsonConvert.SerializeObject(SaveData);
                 File.WriteAllText("saveData.json", jsonString);
-                Console.WriteLine("Saved!"); 
+                Console.WriteLine("Saved game!"); 
                 }
                 catch (System.Exception)
                 {
@@ -197,11 +182,26 @@ namespace CaveAdventure
                 } else if (action.Contains("cave")) {
                     Cave();
                 } else if (action.Contains("save")) {
-                    save();
+                    Save();
                     AwaitInput();
                     Outside();
-                //} else if (action.Contains("load")) {
-                    //
+                } else if (action.Contains("reset")) {
+                    Console.WriteLine("Do you want to reset your game progress? You will need to make your character again etc. (yes or no)");
+                    String action2 = Console.ReadLine().ToLower();
+                    if (action2.Contains("yes")) {
+                        try
+                        {
+                            File.Delete("saveData.json");
+                            Console.WriteLine("Savedata deleted. Please restart the application to start over.");
+                            System.Environment.Exit(1);
+                        }
+                        catch (System.Exception)
+                        {
+                            throw;
+                        }
+                    } else {
+                        Outside();
+                    }
                 } else {
                     Console.WriteLine("Sorry, I didn't quite catch that.");
                     Outside();
@@ -277,16 +277,16 @@ namespace CaveAdventure
                 if (Billy == 3) { // Clear billy option when his quest is complete
                     billyOption = "";
                 }
-                Console.WriteLine($"You arrive at the tavern. You see {billyOption}the bartender, Mark the hangman, Dessie the mathematician and a gang of thieves.\n");
+                Console.WriteLine($"You arrive at the tavern. You see {billyOption}Saga the bartender, Mark the hangman, Walter the mathematician and a gang of thieves.\n");
                 Console.WriteLine("Who would you like to interact with?\n");
                 var option = Console.ReadLine().ToLower();
 
                 if (option.Contains("billy")) { // Choose who to speak to
                     new Dialogue().Billy();
-                } else if (option.Contains("bartender")) {
+                } else if (option.Contains("bartender") || option.Contains("saga")) {
                     Console.WriteLine("You approach the bartender.");
                     new Dialogue().Bartender();
-                } else if (option.Contains("mathematician") || option.Contains("dessie")) {
+                } else if (option.Contains("mathematician") || option.Contains("walter")) {
                     new Dialogue().Mathematician();
                 } else if (option.Contains("hangman") || option.Contains("mark")) {
                     new Dialogue().HangMan();
@@ -344,6 +344,7 @@ namespace CaveAdventure
                             Console.WriteLine("You find a key lying just behind the gravestone. Perhaps this will become important later?");
                             Console.WriteLine("You say a prayer and leave.");
                             GraveKey = true;
+                            GamePlay.Save();
                             GraveStone();
                         } else if (input.Contains("exit")|| input.Contains("back")) { 
                             Graveyard();
@@ -352,7 +353,12 @@ namespace CaveAdventure
                             GraveStone();
                         }
                     }
-
+                } else if (input.Contains("whistle")) {
+                    Console.WriteLine("You find Nessie the dog! You should tell Billy about this.");
+                    GamePlay.Billy = 2;
+                    GamePlay.Save();
+                    AwaitInput();
+                    Graveyard();
                 } else if (input.Contains("exit") || input.Contains("back")) {
                     Exit();
                 } else {

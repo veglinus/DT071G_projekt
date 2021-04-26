@@ -92,12 +92,13 @@ public static class Mathgame
                             if (difficulty == "medium" && points > 5 || difficulty == "hard" && points > 7) { // User wins key
                                 GamePlay.Talk("You got the math key!");
                                 GamePlay.MathKey = true;
+                                GamePlay.Save();
                             }
                             if (decision.Contains("yes")) { // Play again
                                 Console.Clear();
                                 MathgameStart();
                             } else {
-                                GamePlay.Exit(); // Exit
+                                GamePlay.Tavern(); // Exit
                             }
 
                         } else { // Not done with game yet
@@ -134,7 +135,7 @@ public static class Mathgame
         }
         catch (System.Exception)
         {
-            Console.WriteLine("You trip over Dessie, causing him to have to start the game over.");
+            Console.WriteLine("You trip over Walter, causing him to have to start the game over.");
             MathgameStart();
         }
     }
