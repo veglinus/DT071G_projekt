@@ -77,7 +77,7 @@ namespace CaveAdventure
             foreach (char letter in text)
             {
                 Console.Write(letter);
-                Thread.Sleep(25);
+                Thread.Sleep(25); // Wait between every character
                 //Thread.Sleep(0);
             }
         }
