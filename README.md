@@ -1,5 +1,7 @@
 # CaveAdventure - A simple text based adventure game in C# .NET
 
+Clone and run with ```dotnet run```
+
 Small commandline based game written in C# .NET for the course DT071G.
 Most games are cheatable by typing "cheat" instead of a response, all but the hangman.
 
